@@ -1,0 +1,8 @@
+{
+    "alias": "news",
+    "name": "Tin tức",
+    "author": "Phambinh",
+    "description": "Tạo chức năng tin tức tức cho website.",
+    "version": "1.0",
+    "autoload": "psr-4"
+}
