@@ -1,40 +1,25 @@
 <?php
 
-namespace App\Modules\News\Src\Http\Controllers\Admin;
+namespace Phambinh\News\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use AdminController;
 use Validator;
-use App\Modules\News\Src\Models\News;
+use Phambinh\News\Models\News;
 
 class NewsController extends AdminController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return Response
-     */
     public function index()
     {
-        \Metatag::set('title', 'Tất cả tin tức');
 
-        $news = new News();
-        $filter = $news->getRequestFilter();
+        $filter = News::getRequestFilter();
         $this->data['filter'] = $filter;
-        $this->data['newses'] = $news->ofQuery($filter)->paginate($this->paginate);
-        $this->data['news'] = $news;
+        $this->data['newses'] = News::ofQuery($filter)->paginate($this->paginate);
 
+        \Metatag::set('title', 'Tất cả tin tức');
         return view('News::admin.list', $this->data);
     }
 
-    /**
-     *
-     * Hiển thị form thêm tin tức
-     *
-     * @param
-     * @return
-     * @author BinhPham
-     */
     public function create()
     {
         \Metatag::set('title', 'Thêm tin tức mới');
@@ -45,27 +30,33 @@ class NewsController extends AdminController
         return view('News::admin.save', $this->data);
     }
 
-    /**
-     *
-     * Xử lí tin tức trước khi lưu vào database
-     *
-     * @param
-     * @return
-     * @author BinhPham
-     */
     public function store(Request $request)
     {
         $this->validate($request, [
             'news.title'            =>    'required|max:255',
             'news.content'            =>    'min:0',
-            'news.category_id'        =>    'required|exists:terms,id',
+            'news.category_id'        =>    'required|exists:news_categories,id',
             'news.status'            =>    'required|in:0,1',
         ]);
 
         $news = new News();
 
         $news->fill($request->news);
-        $news->slug = str_slug($news->title);
+        
+        switch ($news->status) {
+            case 'disable':
+                $news->status = '1';
+                break;
+
+            case 'enable':
+                $news->status = '2';
+                break;
+        }
+
+        if (!empty($news->slug)) {
+            $news->slug = str_slug($news->title);
+        }
+
         $news->author_id = \Auth::user()->id;
         $news->save();
         $news->categories()->sync((array) $request->news['category_id']);
@@ -87,14 +78,6 @@ class NewsController extends AdminController
         return redirect(route('admin.news.create'));
     }
     
-    /**
-     *
-     * Hiển thị form chỉnh sửa tin tức
-     *
-     * @param
-     * @return
-     * @author BinhPham
-     */
     public function edit($id)
     {
         \Metatag::set('title', 'Chỉnh sửa tin tức');
@@ -107,26 +90,32 @@ class NewsController extends AdminController
         return view('News::admin.save', $this->data);
     }
 
-    /**
-     *
-     * Xử lí tin tức trước khi cập nhật vào database
-     *
-     * @param
-     * @return
-     * @author BinhPham
-     */
     public function update(Request $request, $id)
     {
         $this->validate($request, [
             'news.title'            =>    'required|max:255',
             'news.content'        =>    'min:0',
-            'news.category_id'    =>    'required|exists:terms,id',
+            'news.category_id'    =>    'required|exists:news_categories,id',
             'news.status'            =>    'required|in:0,1',
         ]);
 
         $news = News::find($id);
         $news->fill($request->news);
-        $news->slug = str_slug($news->title);
+
+        switch ($news->status) {
+            case 'disable':
+                $news->status = '1';
+                break;
+
+            case 'enable':
+                $news->status = '2';
+                break;
+        }
+
+        if (!empty($news->slug)) {
+            $news->slug = str_slug($news->title);
+        }
+        
         $news->save();
         $news->categories()->sync((array) $request->news['category_id']);
 
@@ -149,14 +138,6 @@ class NewsController extends AdminController
         return redirect()->back();
     }
 
-    /**
-     *
-     *
-     *
-     * @param
-     * @return
-     * @author BinhPham
-     */
     public function disable(Request $request, $id)
     {
         $news = News::find($id);
@@ -172,14 +153,6 @@ class NewsController extends AdminController
         return redirect()->back();
     }
 
-    /**
-     *
-     *
-     *
-     * @param
-     * @return
-     * @author BinhPham
-     */
     public function enable(Request $request, $id)
     {
         $news = News::find($id);
@@ -195,14 +168,6 @@ class NewsController extends AdminController
         return redirect()->back();
     }
 
-    /**
-     *
-     *
-     *
-     * @param
-     * @return
-     * @author BinhPham
-     */
     public function destroy(Request $request, $id)
     {
         $news = News::find($id);

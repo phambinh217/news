@@ -1,28 +1,28 @@
-@extends( 'Admin::layouts.default',[
+@extends('Admin::layouts.default',[
 	'active_admin_menu' 	=> ['news', 'news.category'],
 	'breadcrumbs' 			=> [
-		'title'	=> ['Tin tức', 'Danh mục', isset( $category_id ) ? 'Thêm mới' : 'Chỉnh sửa'],
+		'title'	=> ['Tin tức', 'Danh mục', isset($category_id) ? 'Thêm mới' : 'Chỉnh sửa'],
 		'url'	=> [
-			admin_url( 'news' ),
-			admin_url( 'news/category' ),
+			admin_url('news'),
+			admin_url('news/category'),
 		],
 	],
 ])
 
-@section( 'page_title', isset( $category_id ) ? 'Chỉnh sửa danh mục' : 'Thêm danh mục mới' )
+@section('page_title', isset($category_id) ? 'Chỉnh sửa danh mục' : 'Thêm danh mục mới')
 
-@if( isset( $category_id ))
-	@section( 'page_sub_title', $category->title )
-	@section( 'tool_bar' )
+@if(isset($category_id))
+	@section('page_sub_title', $category->title)
+	@section('tool_bar')
 		<a href="{{ route('admin.news.category.create') }}" class="btn btn-primary">
-			<i class="fa fa-plus"></i> Thêm danh mục mới
+			<i class="fa fa-plus"></i> <span class="hidden-xs">Thêm danh mục mới</span>
 		</a>
 	@endsection
 @endif
 
-@section( 'content' )
-	<form ajax-form-container action="{{ isset( $category_id ) ? route('admin.news.category.show', ['id' => $category->id])  : admin_url( 'news/category' ) }}" method="post" class="form-horizontal form-bordered form-row-stripped">
-		@if( isset( $category_id ))
+@section('content')
+	<form ajax-form-container action="{{ isset($category_id) ? route('admin.news.category.show', ['id' => $category->id])  : admin_url('news/category') }}" method="post" class="form-horizontal form-bordered form-row-stripped">
+		@if(isset($category_id))
 			<input type="hidden" name="_method" value="PUT" />
 		@endif
 		{{ csrf_field() }}
@@ -97,8 +97,8 @@
                                 <div class="mt-card-item">
                                     <div class="mt-card-thumbnail mt-overlay-1 fileinput-new fileinput">
                                         <div class="fileinput-new">
-                                            @if( old( 'category.thumbnail' ))
-                                                <img src="{{old( 'category.thumbnail' )}}" class="image-preview" />
+                                            @if(old('category.thumbnail'))
+                                                <img src="{{old('category.thumbnail')}}" class="image-preview" />
                                             @else
                                                 <img src="{{ $category->thumbnailOrDefault() }}" class="image-preview" />
                                             @endif
@@ -126,21 +126,13 @@
                 </div>
             </div>
 		</div>
-		<div class="form-actions">
+		<div class="form-actions util-btn-margin-bottom-5">
 			<div class="row">
 				<div class="col-md-offset-3 col-md-9">
-					<button type="submit" class="btn btn-primary" name="save_only">
-						<i class="fa fa-save"></i> Lưu thay đổi
-					</button>
-
-					@if( ! isset( $category_id ))
-						<button type="submit" class="btn btn-primary" name="save_and_new">
-							<i class="fa fa-save"></i> Lưu và tiếp tục thêm
-						</button>
+					@if(! isset($category_id))
+						@include('Admin::admin.components.btn-save-new')
 					@else
-						<button type="submit" class="btn btn-primary" name="save_and_out">
-							<i class="fa fa-save"></i> Lưu và thoát
-						</button>
+						@include('Admin::admin.components.btn-save-out')
 					@endif
 				</div>
 			</div>
@@ -148,15 +140,15 @@
 	</form>
 @endsection
 
-@push( 'css' )
-	<link href="{{ url( 'assets/admin/global/plugins/bootstrap-toastr/toastr.min.css' )}}" rel="stylesheet" type="text/css" />
-	<link href="{{ url( 'assets/admin/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css' ) }}" rel="stylesheet" type="text/css" />
+@push('css')
+	<link href="{{ url('assets/admin/global/plugins/bootstrap-toastr/toastr.min.css')}}" rel="stylesheet" type="text/css" />
+	<link href="{{ url('assets/admin/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css') }}" rel="stylesheet" type="text/css" />
 @endpush
 
-@push( 'js_footer' )
-	<script type="text/javascript" src="{{ url( 'assets/admin/global/plugins/jquery-form/jquery.form.min.js' ) }}"></script>
-	<script type="text/javascript" src="{{ url( 'assets/admin/global/plugins/bootstrap-toastr/toastr.min.js' ) }}"></script>
-	<script type="text/javascript" src="{{ url( 'assets/admin/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js' ) }}"></script>
+@push('js_footer')
+	<script type="text/javascript" src="{{ url('assets/admin/global/plugins/jquery-form/jquery.form.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url('assets/admin/global/plugins/bootstrap-toastr/toastr.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url('assets/admin/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js') }}"></script>
 	<script type="text/javascript">
 	$(function(){
 		pb.ajaxForm();

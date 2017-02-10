@@ -1,10 +1,10 @@
-@push( 'css' )
-	<link rel="stylesheet" type="text/css" href="{{ url( 'assets/admin/global/plugins/select2/css/select2.min.css' ) }}" />
-	<link rel="stylesheet" type="text/css" href="{{ url( 'assets/admin/global/plugins/select2/css/select2-bootstrap.min.css' ) }}" />
+@push('css')
+	<link rel="stylesheet" type="text/css" href="{{ url('assets/admin/global/plugins/select2/css/select2.min.css') }}" />
+	<link rel="stylesheet" type="text/css" href="{{ url('assets/admin/global/plugins/select2/css/select2-bootstrap.min.css') }}" />
 @endpush
 
-@push( 'js_footer' )
-	<script type="text/javascript" src="{{ url( 'assets/admin/global/plugins/select2/js/select2.full.min.js' ) }}"></script>
+@push('js_footer')
+	<script type="text/javascript" src="{{ url('assets/admin/global/plugins/select2/js/select2.full.min.js') }}"></script>
 	<script type="text/javascript">
 		$(function(){
 			var ComponentsSelect2News = function() {
@@ -25,8 +25,8 @@
 
 			            var markup = "<div class='select2-result-repository clearfix'>";
 			            
-			            if( repo.thumbnail != 'null' ) {
-				            markup += "<div class='select2-result-repository__avatar'><img src='" + "{{ url( website('default-news-thumbnail' )) }}" + "' /></div>";
+			            if(repo.thumbnail != 'null') {
+				            markup += "<div class='select2-result-repository__avatar'><img src='" + "{{ url(setting('thumbnail-default')) }}" + "' /></div>";
 			            } else {
 			            	markup += "<div class='select2-result-repository__avatar'><img src='" + repo.thumbnail + "' /></div>";
 			            }
@@ -56,7 +56,7 @@
 						    placeholder: placeholder,
 						},
 			            ajax: {
-			                url: "{{ api_url( 'v1/news' ) }}",
+			                url: "{{ api_url('v1/news') }}",
 			                dataType: 'json',
 			                delay: 250,
 			                data: function(params) {

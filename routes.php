@@ -9,11 +9,11 @@
  * @package: PhambinhCMS
  */
 
-// Route::group(['module' => 'news', 'namespace' => 'App\Modules\News\Src\Http\Controllers', 'middleware' => ['web'], 'prefix' => 'news'], function() {
+// Route::group(['module' => 'news', 'namespace' => 'Phambinh\News\Http\Controllers', 'middleware' => ['web'], 'prefix' => 'news'], function() {
 
 // });
 
-Route::group(['module' => 'news', 'namespace' => 'App\Modules\News\Src\Http\Controllers\Admin', 'middleware' => ['web'], 'prefix' => 'admin/news'], function () {
+Route::group(['module' => 'news', 'namespace' => 'Phambinh\News\Http\Controllers\Admin', 'middleware' => ['web'], 'prefix' => 'admin/news'], function () {
     Route::get('/', 'NewsController@index')->name('admin.news.index');
     Route::get('create', 'NewsController@create')->name('admin.news.create');
     Route::post('/', 'NewsController@store')->name('admin.news.store');
@@ -35,6 +35,6 @@ Route::group(['module' => 'news', 'namespace' => 'App\Modules\News\Src\Http\Cont
     Route::delete('category/{id}', 'CategoryController@destroy')->name('admin.news.category.destroy');
 });
 
-Route::group(['module' => 'news', 'namespace' => 'App\Modules\News\Src\Http\Controllers\Admin', 'middleware' => ['web'], 'prefix' => 'api/v1/news'], function () {
+Route::group(['module' => 'news', 'namespace' => 'Phambinh\News\Http\Controllers\Admin', 'middleware' => ['web'], 'prefix' => 'api/v1/news'], function () {
     Route::get('/', 'NewsController@index')->name('api.v1.news.index');
 });

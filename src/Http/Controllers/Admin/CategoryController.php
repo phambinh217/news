@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\News\Src\Http\Controllers\Admin;
+namespace Phambinh\News\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use App\Modules\News\Src\Models\Category;
+use Phambinh\News\Models\Category;
 use AdminController;
 use Validator;
 
@@ -54,11 +54,12 @@ class CategoryController extends AdminController
         ]);
 
         $category = new Category();
+        
         $category->fill($request->category);
-        $category->group = 'news-category';
         if (empty($category->slug)) {
             $category->slug = str_slug($category->title);
         }
+
         $category->save();
 
         if ($request->ajax()) {

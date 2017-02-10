@@ -7,7 +7,7 @@
  * @version: 1.0
  * @package: PhambinhCMS
  */
-namespace App\Modules\News\Src\Providers;
+namespace Phambinh\News\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -92,28 +92,29 @@ class ModuleServiceProvider extends ServiceProvider
                 'label'     =>  'Tin tức',
                 'url'       =>  admin_url('news'),
                 'icon'      =>  'icon-notebook',
-                ]);
+                'order' => '1',
+            ]);
 
             \AdminMenu::register('news.create', [
                 'parent'    =>  'news',
                 'label'     =>  'Thêm tin tức mới',
                 'url'       =>  admin_url('news/create'),
                 'icon'      =>  'icon-note',
-                ]);
+            ]);
 
             \AdminMenu::register('news.all', [
                 'parent'    =>  'news',
                 'label'     =>  'Tất cả tin tức',
                 'url'       =>  admin_url('news'),
                 'icon'      =>  'icon-magnifier',
-                ]);
+            ]);
 
             \AdminMenu::register('news.category', [
                 'parent'    =>  'news',
                 'label'     =>  'Danh mục tin tức',
                 'url'       =>  admin_url('news/category'),
                 'icon'      =>  'icon-list',
-                ]);
+            ]);
         });
     }
 }

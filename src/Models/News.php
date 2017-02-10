@@ -1,11 +1,16 @@
 <?php
 
-namespace App\Modules\News\Src\Models;
+namespace Phambinh\News\Models;
 
-use App\Modules\Post\Src\Models\Post;
+use Phambinh\Laravel\Database\Traits\Query;
+use Phambinh\Laravel\Database\Traits\Metable;
+use Phambinh\Laravel\Database\Traits\Model as PhambinhModel;
+use Illuminate\Database\Eloquent\Model;
 
-class News extends Post
+class News extends Model implements Query
 {
+    use PhambinhModel;
+    
     protected $table = 'newses';
 
     /**
@@ -28,41 +33,18 @@ class News extends Post
     ];
 
      /**
-     * The database table meta used by the model.
-     *
-     * @var string
-     */
-    protected $metaTable = 'news_meta';
-
-    /**
-     * The foreign key name for the meta table
-     *
-     * @var string
-     */
-    protected $metaKeyName = 'news_id';
-
-    /**
-     * The attributes table meta
-     *
-     * @var array
-     */
-    protected $fillableMeta = [
-        'thumbnail',
-    ];
-
-     /**
      * Các tham số được phép truyền vào từ URL
      *
      * @var array
      */
-    protected $requestFilter = [
-        'id',
-        'orderby',
-        'title',
-        'status'        => [ 'pending', 'enable', 'disable' ],
-        'time_status'   =>  ['coming', 'learning', 'finished'],
-        'category_id',
-        '_keyword',
+    protected static $requestFilter = [
+        'id' => '',
+        'title' => '',
+        'status' => 'in:pending,enable,disable',
+        'time_status' => 'in:coming,enable,disable',
+        'category_id' => 'integer',
+        'orderby' => '',
+        '_keyword' => '',
     ];
 
     /**
@@ -70,55 +52,49 @@ class News extends Post
      *
      * @var array
      */
-    protected $defaultOfQuery = [
+    protected static $defaultOfQuery = [
         'status'        => 'enable',
         'orderby'        =>    'created_at.desc',
     ];
 
+    protected static $statusAble = [
+        ['slug' => 'enable', 'name' => 'Công khai'],
+        ['slug' => 'disable', 'name' => 'Xóa tạm'],
+    ];
+
+    protected static $searchFields = [
+        'news.id',
+        'news.title',
+    ];
+
     public function categories()
     {
-        return $this->beLongsToMany('App\Modules\News\Src\Models\Category', 'news_to_category');
+        return $this->beLongsToMany('Phambinh\News\Models\Category', 'news_to_category');
     }
 
     public function author()
     {
-        return $this->beLongsTo('App\Modules\User\Src\Models\User');
+        return $this->beLongsTo('Phambinh\Cms\User\Models\User');
     }
 
-    /**
-     *
-     *
-     *
-     * @param
-     * @return
-     * @author BinhPham
-     */
     public function scopeOfQuery($query, $args = [])
     {
-        $args = $this->defaultOfQuery($args);
-        
-        $this->baseQuery($query, $args);
+        $query->baseQuery($args);
 
         if (! empty($args['status'])) {
             switch ($args['status']) {
-                case 'all':
-                    break;
-
                 case 'enable':
-                    $query->where('newses.status', '1');
+                    $query->enable();
                     break;
                 
                 case 'disable':
-                    $query->where('newses.status', '0');
+                    $query->disable();
                     break;
             }
         }
 
         if (! empty($args['_keyword'])) {
-            $this->querySearch($query, $args['_keyword'], [
-                'newses.id',
-                'newses.title',
-            ]);
+            $query->querySearch($args['_keyword']);
         }
 
         if (! empty($args['author_id'])) {
@@ -135,42 +111,18 @@ class News extends Post
         }
     }
 
-     /**
-     *
-     * Kiểm tra tin tức là enable
-     *
-     * @param
-     * @return
-     * @author BinhPham
-     */
     public function isEnable()
     {
         $statusCode = $this->status;
         return $statusCode == '1';
     }
 
-    /**
-     *
-     * Kiểm tra tin tức là Disable
-     *
-     * @param
-     * @return
-     * @author BinhPham
-     */
     public function isDisable()
     {
         $statusCode = $this->status;
         return $statusCode == '0';
     }
 
-     /**
-     *
-     *
-     *
-     * @param
-     * @return
-     * @author BinhPham
-     */
     public function statusHtmlClass()
     {
         if ($this->status == '0') {
@@ -180,20 +132,54 @@ class News extends Post
         return null;
     }
 
-    /**
-     *
-     *
-     *
-     * @param
-     * @return
-     * @author BinhPham
-     */
     public function thumbnailOrDefault()
     {
         if (! empty($this->thumbnail)) {
             return $this->thumbnail;
         }
 
-        return website('default-news-thumbnail');
+        return setting('thumbnail-default');
+    }
+
+    public static function statusAble()
+    {
+        return self::$statusAble;
+    }
+
+    public function scopeEnable($query)
+    {
+        return $query->where('status', '1');
+    }
+
+    public function scopeSearch($query, $keyword)
+    {
+        $keyword = str_keyword($keyword);
+        foreach (self::$searchFields as $index => $field) {
+            if ($index == 0) {
+                $query->where($field, 'like', $keyword);
+            } else {
+                $query->orWhere($field, 'like', $keyword);
+            }
+        }
+    }
+
+    public function scopeDisable($query)
+    {
+        return $query->where('status', '0');
+    }
+
+    public function scopePending($query)
+    {
+        return $query->where('status', '3');
+    }
+
+    public function markAsEnable()
+    {
+        $this->where('id', $this->id)->update(['status' => '1']);
+    }
+
+    public function markAsDisable()
+    {
+        $this->where('id', $this->id)->update(['status' => '0']);
     }
 }

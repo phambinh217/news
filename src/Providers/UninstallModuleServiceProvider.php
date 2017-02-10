@@ -7,7 +7,7 @@
  * @version: 1.0
  * @package: PhambinhCMS
  */
-namespace App\Modules\News\Src\Providers;
+namespace Phambinh\News\Providers;
 
 use Illuminate\Support\ServiceProvider;
 

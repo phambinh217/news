@@ -1,13 +1,18 @@
 <?php
 
-namespace App\Modules\News\Src\Models;
+namespace Phambinh\News\Models;
 
-use App\Modules\Post\Src\Models\Term;
+use Illuminate\Database\Eloquent\Model;
+use Phambinh\Laravel\Database\Traits\Query;
+use Phambinh\Laravel\Database\Traits\Metable;
+use Phambinh\Laravel\Database\Traits\Model as PhambinhModel;
 use Illuminate\Database\Eloquent\Builder;
 
-class Category extends Term
+class Category extends Model implements Query
 {
-    protected $table = 'terms';
+    use PhambinhModel;
+
+    protected $table = 'news_categories';
 
     /**
      * The attributes that are mass assignable.
@@ -25,75 +30,21 @@ class Category extends Term
         'meta_keyword',
     ];
 
-    /**
-     * The database table meta used by the model.
-     *
-     * @var string
-     */
-    protected $metaTable = 'term_meta';
-
-    /**
-     * The foreign key name for the meta table
-     *
-     * @var string
-     */
-    protected $metaKeyName = 'term_id';
-
-    /**
-     * The attributes table meta
-     *
-     * @var array
-     */
-    protected $fillableMeta = [
-        'description',
-        'thumbnail',
-        'icon',
+    protected static $requestFilter = [
+        'id'  => 'integer',
+        'limit' => '',
+        'offset' => '',
+        'orderby' => '',
     ];
 
-    protected $requestFilter = [
-        '_querySearch' => ['true', 'false'],
-         'id',
-        'orderby',
-        'limit',
-        'offset',
-    ];
-
-    protected $defaultOfQuery = [
-        '_querySearch'  => 'false',
+    protected static $defaultOfQuery = [
         'orderby'       => 'id.desc',
     ];
 
     public function newses()
     {
-        return $this->beLongsToMany('App\Modules\News\Src\Models\News', 'news_to_category');
+        return $this->beLongsToMany('Phambinh\News\Models\News', 'news_to_category');
     }
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::addGlobalScope('group', function (Builder $builder) {
-            $builder->where('group', 'news-category');
-        });
-    }
-
-    /**
-     *
-     *
-     *
-     * @param
-     * @return
-     * @author BinhPham
-     */
-    public function getThumbnail()
-    {
-        if (isset($this->toArray()['meta_data']['thumbnail']) && ! empty($this->toArray()['meta_data']['thumbnail'])) {
-            return $this->toArray()['meta_data']['thumbnail'];
-        }
-
-        return website('thumbnail-default');
-    }
-
     
     public function thumbnailOrDefault()
     {
@@ -101,6 +52,11 @@ class Category extends Term
             return $this->thumbnail;
         }
 
-        return website('default-course-thumbnail');
+        return setting('thumbnail-default');
+    }
+
+    public function scopeOfQuery($query, $args = [])
+    {   
+        $query->baseQuery($args);
     }
 }
