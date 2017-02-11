@@ -32,7 +32,7 @@
 					Tên danh mục <span class="required">*</span>
 				</label>
 				<div class="col-sm-7">
-					<input value="{{ $category->title }}" name="category[title]" type="text" placeholder="" class="form-control">
+					<input value="{{ $category->name }}" name="category[name]" type="text" placeholder="" class="form-control">
 				</div>
 			</div>
 			<div class="form-group">
@@ -41,9 +41,25 @@
 				</label>
 				<div class="col-sm-7">
 					<input value="{{ $category->slug }}" name="category[slug]" type="text" placeholder="" class="form-control">
-					<span class="help-block"> Slug dùng để tạo đường dẫn thân thiện </span>
+					<label class="checkbox-inline">
+						<input type="checkbox" value="true" checked="" id="create-slug">
+						Từ tên danh mục
+					</label>
 				</div>
 			</div>
+			<div class="form-group">
+                <label class="control-label col-md-3">
+                    Danh mục cha<span class="required">*</span>
+                </label>
+                <div class="col-md-7">
+                    @include('News::admin.components.form-select-category', [
+                        'categories' => $category->ofParentAble()->get(),
+                        'name' => 'news[parent_id]',
+                        'selected' => isset($category_id) ? $category->parent_id : '0',
+                    ])
+                    <span class="help-block"> Để trống nếu bạn muốn danh mục này là danh mục gốc </span>
+                </div>
+            </div>
 			<div class="form-group">
 				<label class="control-label col-sm-3 pull-left">
 					Mô tả
@@ -150,8 +166,20 @@
 	<script type="text/javascript" src="{{ url('assets/admin/global/plugins/bootstrap-toastr/toastr.min.js') }}"></script>
 	<script type="text/javascript" src="{{ url('assets/admin/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js') }}"></script>
 	<script type="text/javascript">
-	$(function(){
-		pb.ajaxForm();
-	});
+		$('#create-slug').click(function() {
+			if(this.checked) {
+				var title = $('input[name="category[name]"]').val();
+				var slug = strSlug(title);
+				$('input[name="category[slug]"]').val(slug);
+			}
+		});
+
+		$('input[name="category[name]"]').keyup(function() {
+			if ($('#create-slug').is(':checked')) {
+				var title = $(this).val();
+				var slug = strSlug(title);
+				$('input[name="category[slug]"]').val(slug);	
+			}
+		});
 	</script>
 @endpush

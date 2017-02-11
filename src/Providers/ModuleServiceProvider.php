@@ -54,6 +54,8 @@ class ModuleServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        \Menu::registerType('Danh mục tin', \Phambinh\News\Models\Category::class);
+
         add_action('app.init', function () {
             \AccessControl::register('news.manage', [
                 

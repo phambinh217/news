@@ -18,21 +18,18 @@
 
 @section('content')
 <div class="table-function-container">
-	<div class="row">
+	<div class="note note-success">
+		<p><i class="fa fa-info"></i> Tổng số {{ $categories->count() }} kết quả</p>
+	</div>
+	<div class="row table-above">
 		<div class="col-sm-6">
-			<div class="form-inline filter">
-				<div style="display: inline" category-apply-form>
-					<div class="form-group">
-						<select class="form-control input-sm" category-apply-action>
-							<option value="0"></option>
-							<option value="">Xóa tạm</option>
-						</select>
-					</div>
-					<div class="form-group">
-						<button class="btn btn-primary btn-sm" category-apply-btn>Áp dụng</button>
-					</div>
+			<div class="form-inline mb-10 apply-action">
+				@include('Admin::admin.components.form-apply-action', [
+					'actions' => [
+						['action' => '', 'name' => 'Xóa vĩnh viễn', 'method' => 'DELETE'],
+					],
+				])
 				</div>
-			</div>
 		</div>
 		<div class="col-sm-6 text-right">
 			{!!$categories->setPath('category')->appends($filter)->render()!!}
@@ -87,15 +84,14 @@
 					</td>
 					<td category-action>
 						<div class="btn-group" table-function>
-                            <a href="" class="btn btn-circle btn-xs grey-salsa btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-											<span class="hidden-xs">
-				                            	Chức năng
-				                                <span class="fa fa-angle-down"> </span>
-			                                </span>
-			                                <span class="visible-xs">
-			                                	<span class="fa fa-cog"> </span>
-			                                </span>
-                                <span class="fa fa-angle-down"> </span>
+							<a href="" class="btn btn-circle btn-xs grey-salsa btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+								<span class="hidden-xs">
+									Chức năng
+									<span class="fa fa-angle-down"> </span>
+								</span>
+								<span class="visible-xs">
+									<span class="fa fa-cog"> </span>
+								</span>
                             </a>
                             <ul class="dropdown-menu pull-right">
                             	<li><a href="{{ route('admin.news.category.show', ['id' => $category_item->id]) }}"><i class="fa fa-eye"></i> Xem</a></li>

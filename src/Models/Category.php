@@ -6,11 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 use Phambinh\Laravel\Database\Traits\Query;
 use Phambinh\Laravel\Database\Traits\Metable;
 use Phambinh\Laravel\Database\Traits\Model as PhambinhModel;
+use Phambinh\Cms\Setting\Supports\Traits\NavigationMenu;
+
 use Illuminate\Database\Eloquent\Builder;
 
 class Category extends Model implements Query
 {
-    use PhambinhModel;
+    use PhambinhModel, NavigationMenu;
 
     protected $table = 'news_categories';
 
@@ -21,7 +23,7 @@ class Category extends Model implements Query
      */
     protected $fillable = [
         'id',
-        'title',
+        'name',
         'slug',
         'parent_id',
         'group',
@@ -56,7 +58,22 @@ class Category extends Model implements Query
     }
 
     public function scopeOfQuery($query, $args = [])
-    {   
+    {
         $query->baseQuery($args);
+    }
+
+    public function scopeOfParentAble($query)
+    {
+        $query->where('id', '!=', $this->id)->where('parent_id', '!=', $this->id);
+    }
+
+    public function menuUrl()
+    {
+        return 'url';
+    }
+
+    public function menuTitle()
+    {
+        return $this->name;
     }
 }

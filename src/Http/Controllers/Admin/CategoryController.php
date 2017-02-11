@@ -48,7 +48,7 @@ class CategoryController extends AdminController
     public function store(Request $request)
     {
         $this->validate($request, [
-            'category.title'        => 'required|max:255',
+            'category.name'        => 'required|max:255',
             'category.slug'            => 'max:255',
             'category.description'    => 'max:300',
         ]);
@@ -116,7 +116,7 @@ class CategoryController extends AdminController
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'category.title'        => 'required|max:255',
+            'category.name'        => 'required|max:255',
             'category.slug'            => 'max:255',
             'category.description'    => 'max:300',
         ]);

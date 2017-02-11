@@ -10,7 +10,6 @@
  */
 
 // Route::group(['module' => 'news', 'namespace' => 'Phambinh\News\Http\Controllers', 'middleware' => ['web'], 'prefix' => 'news'], function() {
-
 // });
 
 Route::group(['module' => 'news', 'namespace' => 'Phambinh\News\Http\Controllers\Admin', 'middleware' => ['web'], 'prefix' => 'admin/news'], function () {
