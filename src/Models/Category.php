@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Phambinh\Laravel\Database\Traits\Query;
 use Phambinh\Laravel\Database\Traits\Metable;
 use Phambinh\Laravel\Database\Traits\Model as PhambinhModel;
-use Phambinh\Cms\Setting\Supports\Traits\NavigationMenu;
+use Phambinh\Appearance\Supports\Traits\NavigationMenu;
 
 use Illuminate\Database\Eloquent\Builder;
 
