@@ -4,5 +4,7 @@
     "author": "Phambinh",
     "description": "Tạo chức năng tin tức tức cho website.",
     "version": "1.0",
-    "autoload": "psr-4"
+    "autoload": "psr-4",
+    "github_repo": "phambinh217/news",
+    "packagist_name": "phambinh/news"
 }

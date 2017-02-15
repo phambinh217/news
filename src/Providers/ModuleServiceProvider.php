@@ -54,6 +54,7 @@ class ModuleServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        \Module::registerFromJsonFile('appearance', __DIR__ .'/../../module.json');
         \Menu::registerType('Danh mục tin', \Phambinh\News\Models\Category::class);
 
         add_action('app.init', function () {
