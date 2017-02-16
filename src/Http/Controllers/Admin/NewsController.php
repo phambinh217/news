@@ -11,7 +11,6 @@ class NewsController extends AdminController
 {
     public function index()
     {
-
         $filter = News::getRequestFilter();
         $this->data['filter'] = $filter;
         $this->data['newses'] = News::ofQuery($filter)->paginate($this->paginate);

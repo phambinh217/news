@@ -30,6 +30,9 @@
                     <li class="">
                         <a href="#news-data" data-toggle="tab" aria-expanded="false"> Dữ liệu </a>
                     </li>
+                    <li class="">
+                        <a href="#news-seo" data-toggle="tab" aria-expanded="false"> SEO </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -43,11 +46,20 @@
                     <div class="tab-content">
                         <div class="tab-pane active" id="news-content">
                             <div class="form-group">
-                                <label class="control-label col-md-2">
-                                    Tên tin tức<span class="required">*</span>
-                                </label>
-                                <div class="col-md-7">
-                                    <input value="{{ $news->title }}" name="news[title]" type="text" class="form-control" />
+                                <label class="control-label col-sm-2">Tên tin</label>
+                                <div class="col-sm-10">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                        <input value="{{ $news->title }}" name="news[title]" type="text" class="form-control" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <input type="text" name="news[slug]" value="{{ $news->slug }}" placeholder="Slug" class="form-control str-slug" value="{{ $news->slug or '' }}" />
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" value="true" checked="" id="create-slug">
+                                                Từ tên tin
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -65,36 +77,12 @@
                                     Danh mục<span class="required">*</span>
                                 </label>
                                 <div class="col-md-10">
-                                    @include('News::admin.components.form-select-category', [
+                                    @include('News::admin.components.form-checkbox-category', [
                                         'categories' =>  Phambinh\News\Models\Category::get(),
                                         'name' => 'news[category_id][]',
-                                        'selected' => isset($news_id) ? $news->categories->pluck('id')->toArray() : [],
+                                        'checked' => $news->categories->pluck('id')->all(),
                                         'class' => 'width-auto',
                                     ])
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-2">
-                                    Meta title
-                                </label>
-                                <div class="col-md-7">
-                                    <input type="text" name="news[meta_title]" class="form-control" value="{{ $news->meta_title }}" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-2">
-                                    Meta description
-                                </label>
-                                <div class="col-md-7">
-                                    <textarea class="form-control" name="news[meta_description]">{{ $news->meta_description }}</textarea>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-2">
-                                    Meta keyword
-                                </label>
-                                <div class="col-md-7">
-                                    <input type="text" name="news[meta_keyword]" class="form-control" value="{{ $news->meta_keyword }}" />
                                 </div>
                             </div>
                             <div class="form-group media-box-group">
@@ -120,6 +108,32 @@
                                         'name' => 'news[status]',
                                         'selected' => isset($news_id) ? ($news->status == 1 ? 'enable' : 'disable') : null,
                                     ])
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="news-seo">
+                            <div class="form-group">
+                                <label class="control-label col-md-2">
+                                    Meta title
+                                </label>
+                                <div class="col-md-10">
+                                    <input type="text" name="news[meta_title]" class="form-control" value="{{ $news->meta_title }}" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">
+                                    Meta description
+                                </label>
+                                <div class="col-md-10">
+                                    <textarea class="form-control" name="news[meta_description]">{{ $news->meta_description }}</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">
+                                    Meta keyword
+                                </label>
+                                <div class="col-md-10">
+                                    <input type="text" name="news[meta_keyword]" class="form-control" value="{{ $news->meta_keyword }}" />
                                 </div>
                             </div>
                         </div>
@@ -150,4 +164,23 @@
     <script type="text/javascript" src="{{ url('assets/admin/global/plugins/jquery-form/jquery.form.min.js') }}"></script>
     <script type="text/javascript" src="{{ url('assets/admin/global/plugins/bootstrap-toastr/toastr.min.js') }}"></script>
     <script type="text/javascript" src="{{ url('assets/admin/global/plugins/tinymce/tinymce.min.js')}} "></script>
+    <script type="text/javascript">
+        $(function(){
+            $('#create-slug').click(function() {
+                if(this.checked) {
+                    var title = $('input[name="news[title]"]').val();
+                    var slug = strSlug(title);
+                    $('input[name="news[slug]"]').val(slug);
+                }
+            });
+
+            $('input[name="news[title]"]').keyup(function() {
+                if ($('#create-slug').is(':checked')) {
+                    var title = $(this).val();
+                    var slug = strSlug(title);
+                    $('input[name="news[slug]"]').val(slug); 
+                }
+            });
+        });
+    </script>
 @endpush
