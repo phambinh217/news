@@ -54,7 +54,7 @@ class Category extends Model implements Query
             return $this->thumbnail;
         }
 
-        return setting('thumbnail-default');
+        return setting('default-thumbnail');
     }
 
     public function scopeOfQuery($query, $args = [])

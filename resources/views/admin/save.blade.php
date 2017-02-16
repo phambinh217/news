@@ -20,104 +20,125 @@
 @endif
 
 @section('content')
-	<form ajax-form-container method="post" action="{{ isset($news_id) ? admin_url('news/' . $news->id) : admin_url('news') }}" class="form-horizontal form-bordered form-row-stripped">
-        @if(isset($news_id))
-            <input type="hidden" name="_method" value="PUT" />
-        @endif
-        {{ csrf_field() }}
-        <div class="form-body">
-            <div class="form-group">
-                <label class="control-label col-md-2">
-                    <strong>Tên tin tức</strong><span class="required">*</span>
-                </label>
-                <div class="col-md-7">
-                    <input value="{{ $news->title }}" name="news[title]" type="text" class="form-control" />
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="control-label col-md-2">
-                    <strong>Danh mục</strong><span class="required">*</span>
-                </label>
-                <div class="col-md-10">
-                    @include('News::admin.components.form-select-category', [
-                        'categories' =>  Phambinh\News\Models\Category::get(),
-                        'name' => 'news[category_id][]',
-                        'selected' => isset($news_id) ? $news->categories->pluck('id')->toArray() : [],
-                        'class' => 'width-auto',
-                    ])
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-md-2">
-                    <strong>Nội dung</strong><span class="required">*</span>
-                </label>
-                <div class="col-md-10">
-                    <textarea name="news[content]" class="form-control texteditor">{{ $news->content }}</textarea>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-md-2">
-                    <strong>Meta title</strong>
-                </label>
-                <div class="col-md-7">
-                    <input type="text" name="news[meta_title]" class="form-control" value="{{ $news->meta_title }}" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-md-2">
-                    <strong>Meta description</strong>
-                </label>
-                <div class="col-md-7">
-                    <textarea class="form-control" name="news[meta_description]">{{ $news->meta_description }}</textarea>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-md-2">
-                    <strong>Meta keyword</strong>
-                </label>
-                <div class="col-md-7">
-                    <input type="text" name="news[meta_keyword]" class="form-control" value="{{ $news->meta_keyword }}" />
-                </div>
-            </div>
-            <div class="form-group media-box-group">
-                <label class="control-label col-md-2">
-                    <strong>Thumbnail</strong>
-                </label>
-                <div class="col-sm-10">
-                    @include('Admin::admin.components.form-chose-media', [
-                        'name'              => 'news[thumbnail]',
-                        'value'             => old('news.thumbnail', $news->thumbnailOrDefault()),
-                        'url_image_preview' => old('news.thumbnail', thumbnail_url($news->thumbnailOrDefault(), ['width' => '100', 'height' => '100']))
-                    ])
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-sm-2">
-                    <strong>Trạng thái</strong> <span class="required">*</span>
-                </label>
-                <div class="col-sm-10">
-                    @include('News::admin.components.form-select-status', [
-                        'statuses' => $news->statusAble(),
-                        'class' => 'width-auto',
-                        'name' => 'news[status]',
-                        'selected' => isset($news_id) ? ($news->status == 1 ? 'enable' : 'disable') : null,
-                    ])
-                </div>
+    <div class="portlet light bordered form-fit">
+        <div class="portlet-title with-tab">
+            <div class="tab-default">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a href="#news-content" data-toggle="tab" aria-expanded="true"> Nội dung </a>
+                    </li>
+                    <li class="">
+                        <a href="#news-data" data-toggle="tab" aria-expanded="false"> Dữ liệu </a>
+                    </li>
+                </ul>
             </div>
         </div>
-        <div class="form-actions util-btn-margin-bottom-5">
-            <div class="row">
-                <div class="col-md-offset-3 col-md-9">
-                    @if(!isset($news_id))
-                        @include('Admin::admin.components.btn-save-new')
-                    @else
-                        @include('Admin::admin.components.btn-save-out')
-                    @endif
+        <div class="portlet-body form">
+            <form ajax-form-container method="post" action="{{ isset($news_id) ? admin_url('news/' . $news->id) : admin_url('news') }}" class="form-horizontal form-bordered form-row-stripped">
+                @if(isset($news_id))
+                    <input type="hidden" name="_method" value="PUT" />
+                @endif
+                {{ csrf_field() }}
+                <div class="form-body">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="news-content">
+                            <div class="form-group">
+                                <label class="control-label col-md-2">
+                                    Tên tin tức<span class="required">*</span>
+                                </label>
+                                <div class="col-md-7">
+                                    <input value="{{ $news->title }}" name="news[title]" type="text" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">
+                                    Nội dung<span class="required">*</span>
+                                </label>
+                                <div class="col-md-10">
+                                    <textarea name="news[content]" class="form-control texteditor">{{ $news->content }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="news-data">
+                            <div class="form-group">
+                                <label class="control-label col-md-2">
+                                    Danh mục<span class="required">*</span>
+                                </label>
+                                <div class="col-md-10">
+                                    @include('News::admin.components.form-select-category', [
+                                        'categories' =>  Phambinh\News\Models\Category::get(),
+                                        'name' => 'news[category_id][]',
+                                        'selected' => isset($news_id) ? $news->categories->pluck('id')->toArray() : [],
+                                        'class' => 'width-auto',
+                                    ])
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">
+                                    Meta title
+                                </label>
+                                <div class="col-md-7">
+                                    <input type="text" name="news[meta_title]" class="form-control" value="{{ $news->meta_title }}" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">
+                                    Meta description
+                                </label>
+                                <div class="col-md-7">
+                                    <textarea class="form-control" name="news[meta_description]">{{ $news->meta_description }}</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">
+                                    Meta keyword
+                                </label>
+                                <div class="col-md-7">
+                                    <input type="text" name="news[meta_keyword]" class="form-control" value="{{ $news->meta_keyword }}" />
+                                </div>
+                            </div>
+                            <div class="form-group media-box-group">
+                                <label class="control-label col-md-2">
+                                    Thumbnail
+                                </label>
+                                <div class="col-sm-10">
+                                    @include('Admin::admin.components.form-chose-media', [
+                                        'name'              => 'news[thumbnail]',
+                                        'value'             => old('news.thumbnail', $news->thumbnailOrDefault()),
+                                        'url_image_preview' => old('news.thumbnail', thumbnail_url($news->thumbnailOrDefault(), ['width' => '100', 'height' => '100']))
+                                    ])
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2">
+                                    Trạng thái <span class="required">*</span>
+                                </label>
+                                <div class="col-sm-10">
+                                    @include('News::admin.components.form-select-status', [
+                                        'statuses' => $news->statusAble(),
+                                        'class' => 'width-auto',
+                                        'name' => 'news[status]',
+                                        'selected' => isset($news_id) ? ($news->status == 1 ? 'enable' : 'disable') : null,
+                                    ])
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+                <div class="form-actions util-btn-margin-bottom-5">
+                    <div class="row">
+                        <div class="col-md-offset-3 col-md-9">
+                            @if(!isset($news_id))
+                                @include('Admin::admin.components.btn-save-new')
+                            @else
+                                @include('Admin::admin.components.btn-save-out')
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
-    </form>
+    </div>
 @endsection
 
 @push('css')

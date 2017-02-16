@@ -17,7 +17,7 @@
 			var user = new findCoruse({
 				el: '.find-news',
 				url: '{{ api_url('v1/news') }}',
-				defaultThumbnail: '{{ setting('thumbnail-default') }}',
+				defaultThumbnail: '{{ setting('default-thumbnail') }}',
 				placeholder: 'Tìm kiếm',
 			});
 		});

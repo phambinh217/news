@@ -26,7 +26,7 @@
 			            var markup = "<div class='select2-result-repository clearfix'>";
 			            
 			            if(repo.thumbnail != 'null') {
-				            markup += "<div class='select2-result-repository__avatar'><img src='" + "{{ url(setting('thumbnail-default')) }}" + "' /></div>";
+				            markup += "<div class='select2-result-repository__avatar'><img src='" + "{{ url(setting('default-thumbnail')) }}" + "' /></div>";
 			            } else {
 			            	markup += "<div class='select2-result-repository__avatar'><img src='" + repo.thumbnail + "' /></div>";
 			            }

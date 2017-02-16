@@ -138,7 +138,7 @@ class News extends Model implements Query
             return $this->thumbnail;
         }
 
-        return setting('thumbnail-default');
+        return setting('default-thumbnail');
     }
 
     public static function statusAble()
