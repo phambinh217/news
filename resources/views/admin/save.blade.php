@@ -106,7 +106,7 @@
                 </div>
             </div>
         </div>
-        <div class="form-action util-btn-margin-bottom-5">
+        <div class="form-actions util-btn-margin-bottom-5">
             <div class="row">
                 <div class="col-md-offset-3 col-md-9">
                     @if(!isset($news_id))
