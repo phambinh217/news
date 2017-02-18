@@ -24,6 +24,7 @@ class CategoryController extends AdminController
         $this->data['categories']    = $category->ofQuery($filter)->paginate($this->paginate);
         $this->data['filter'] = $filter;
 
+        $this->authorize('admin.news.category.index');
         return view('News::admin.category.list', $this->data);
     }
 
@@ -37,6 +38,8 @@ class CategoryController extends AdminController
         \Metatag::set('title', 'Thêm danh mục mới');
 
         $this->data['category'] = new Category();
+
+        $this->authorize('admin.news.category.create');
         return view('News::admin.category.save', $this->data);
     }
 
@@ -47,6 +50,8 @@ class CategoryController extends AdminController
      */
     public function store(Request $request)
     {
+        $this->authorize('admin.news.category.create');
+
         $this->validate($request, [
             'category.name'        => 'required|max:255',
             'category.slug'            => 'max:255',
@@ -80,17 +85,6 @@ class CategoryController extends AdminController
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
@@ -103,6 +97,7 @@ class CategoryController extends AdminController
         $category = Category::find($id);
         $this->data['category'] = $category;
         $this->data['category_id'] = $id;
+        $this->authorize('admin.news.category.edit', $category);
 
         return view('News::admin.category.save', $this->data);
     }
@@ -122,6 +117,9 @@ class CategoryController extends AdminController
         ]);
 
         $category = Category::find($id);
+        
+        $this->authorize('admin.news.category.edit', $category);
+
         $category->fill($request->category);
         if (empty($category->slug)) {
             $category->slug = str_slug($category->title);
@@ -156,6 +154,9 @@ class CategoryController extends AdminController
     public function destroy(Request $request, $id)
     {
         $category = Category::find($id);
+        
+        $this->authorize('admin.news.category.destroy', $category);
+
         if ($category->newses()->count()) {
             if ($request->ajax()) {
                 return response()->json([

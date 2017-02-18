@@ -9,6 +9,7 @@
  */
 namespace Phambinh\News\Providers;
 
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class ModuleServiceProvider extends ServiceProvider
@@ -45,6 +46,23 @@ class ModuleServiceProvider extends ServiceProvider
                 include __DIR__ . '/../../routes.php';
             }
         }
+
+        $this->registerPolicies();
+    }
+
+    public function registerPolicies()
+    {
+        \AccessControl::define('Tin tức - Xem danh sách tin', 'admin.news.index');
+        \AccessControl::define('Tin tức - Thêm tin', 'admin.news.create');
+        \AccessControl::define('Tin tức - Sửa tin', 'admin.news.edit');
+        \AccessControl::define('Tin tức - Ẩn tin', 'admin.news.disable');
+        \AccessControl::define('Tin tức - Công khai thin', 'admin.news.enable');
+        \AccessControl::define('Tin tức - Xóa tin', 'admin.news.destroy');
+
+        \AccessControl::define('Tin tức - Xem danh sách danh mục', 'admin.news.category.index');
+        \AccessControl::define('Tin tức - Thêm danh mục mới', 'admin.news.category.create');
+        \AccessControl::define('Tin tức - Sửa danh mục', 'admin.news.category.edit');
+        \AccessControl::define('Tin tức - Xóa danh mục', 'admin.news.category.destroy');
     }
 
     /**
@@ -56,38 +74,6 @@ class ModuleServiceProvider extends ServiceProvider
     {
         \Module::registerFromJsonFile('appearance', __DIR__ .'/../../module.json');
         \Menu::registerType('Danh mục tin', \Phambinh\News\Models\Category::class);
-
-        add_action('app.init', function () {
-            \AccessControl::register('news.manage', [
-                
-                'admin.news.index',
-                'admin.news.create',
-                'admin.news.edit',
-
-                'admin.news.store',
-                'admin.news.update',
-                'admin.news.enable',
-                'admin.news.disable',
-
-                ], ['extend' => 'admin.base', 'label' => 'Quản lí tin tức']);
-
-            \AccessControl::register('news.delete', [
-                'admin.news.destroy',
-                ], ['extend' => 'admin.base', 'label' => 'Xóa tin tức']);
-
-            \AccessControl::register('news.category', [
-                'admin.news.category.index',
-                'admin.news.category.create',
-                'admin.news.category.edit',
-
-                'admin.news.category.store',
-                'admin.news.category.update',
-                'admin.news.category.disable',
-                'admin.news.category.enable',
-                'admin.news.category.destroy',
-
-                ], ['extend' => 'admin.base', 'label' => 'Quản lí danh mục tin tức']);
-        });
 
         add_action('admin.init', function () {
             \AdminMenu::register('news', [

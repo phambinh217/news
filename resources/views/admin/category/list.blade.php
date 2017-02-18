@@ -11,9 +11,11 @@
 @section('page_title', 'Danh mục tin tức')
 
 @section('tool_bar')
-	<a href="{{ route('admin.news.category.create') }}" class="btn btn-primary">
-		<i class="fa fa-plus"></i> <span class="hidden-xs">Thêm danh mục mới</span>
-	</a>
+	@can('admin.news.category.create')
+		<a href="{{ route('admin.news.category.create') }}" class="btn btn-primary">
+			<i class="fa fa-plus"></i> <span class="hidden-xs">Thêm danh mục mới</span>
+		</a>
+	@endcan
 @endsection
 
 @section('content')
@@ -41,8 +43,8 @@
 				<tr>
 					<th width="50" class="table-checkbox text-center">
 						<div class="checker">
-									<input type="checkbox" class="icheck check-all">
-								</div>
+							<input type="checkbox" class="icheck check-all">
+						</div>
 					</th>
 					<th class="text-center">
 						{!! $category->linkSort('ID', 'id') !!}
@@ -72,11 +74,19 @@
 					</td>
 					<td><img src="{{ thumbnail_url($category_item->thumbnail, ['height' => '70', 'width' => '70']) }}" /></td>
 					<td>
-						<a href="{{ route('admin.news.category.edit', ['id' => $category_item->id]) }}">
+						@can('admin.news.category.edit', $category_item)
+							<a href="{{ route('admin.news.category.edit', ['id' => $category_item->id]) }}">
+								<strong>
+									{{ $category_item->name }}
+								</strong>
+							</a>
+						@endcan
+
+						@cannot('admin.news.category.edit', $category_item)
 							<strong>
 								{{ $category_item->name }}
 							</strong>
-						</a>
+						@endcannot
 						({{ $category_item->newses()->count() }} tin tức)
 					</td>
 					<td>
@@ -94,10 +104,12 @@
 								</span>
                             </a>
                             <ul class="dropdown-menu pull-right">
-                            	<li><a href="{{ route('admin.news.category.show', ['id' => $category_item->id]) }}"><i class="fa fa-eye"></i> Xem</a></li>
-                                <li role="presentation" class="divider"> </li>
-                                <li><a href="{{ route('admin.news.category.edit', ['id' => $category_item->id]) }}"><i class="fa fa-pencil"></i> Sửa</a></li>
-                            	<li><a data-function="destroy" data-method="delete" href="{{ route('admin.news.category.destroy', ['id' => $category_item->id]) }}"><i class="fa fa-times"></i> Xóa</a></li>
+                            	@can('admin.news.category.edit', $category_item)
+                                	<li><a href="{{ route('admin.news.category.edit', ['id' => $category_item->id]) }}"><i class="fa fa-pencil"></i> Sửa</a></li>
+                                @endcan
+                                @can('admin.news.category.destroy', $category_item)
+                            		<li><a data-function="destroy" data-method="delete" href="{{ route('admin.news.category.destroy', ['id' => $category_item->id]) }}"><i class="fa fa-times"></i> Xóa</a></li>
+                            	@endcan
                             </ul>
                         </div>
 					</td>

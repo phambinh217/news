@@ -58,8 +58,8 @@ class News extends Model implements Query
     ];
 
     protected static $statusAble = [
-        ['slug' => 'enable', 'name' => 'Công khai'],
         ['slug' => 'disable', 'name' => 'Xóa tạm'],
+        ['slug' => 'enable', 'name' => 'Công khai'],
     ];
 
     protected static $searchFields = [

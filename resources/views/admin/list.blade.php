@@ -142,9 +142,14 @@
 							<strong>{{ $news_item->id }}</strong>
 						</td>
 						<td>
-							<a href="">
+							@can('admin.news.edit', $news_item)
+								<a href="{{ route('admin.news.edit', ['id' => $news_item->id]) }}">
+									<strong>{{ $news_item->title }}</strong>
+								</a>
+							@endcan
+							@cannot('admin.news.edit', $news_item)
 								<strong>{{ $news_item->title }}</strong>
-							</a>
+							@endcannot
 						</td>
 						<td class="text-center">
 							
@@ -155,40 +160,44 @@
 
 						<td>
 							<div class="btn-group pull-right" table-function>
-		                        <a href="" class="btn btn-circle btn-xs grey-salsa btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-												<span class="hidden-xs">
-					                            	Chức năng
-					                                <span class="fa fa-angle-down"> </span>
-				                                </span>
-				                                <span class="visible-xs">
-				                                	<span class="fa fa-cog"> </span>
-				                                </span>
-		                            <span class="fa fa-angle-down"> </span>
+								<a href="" class="btn btn-circle btn-xs grey-salsa btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+									<span class="hidden-xs">
+										Chức năng
+										<span class="fa fa-angle-down"> </span>
+									</span>
+									<span class="visible-xs">
+										<span class="fa fa-cog"> </span>
+									</span>
+									<span class="fa fa-angle-down"> </span>
 		                        </a>
 		                        <ul class="dropdown-menu pull-right">
 		                            <li><a href="{{ route('admin.news.show', ['id' => $news_item->id]) }}"><i class="fa fa-eye"></i> Xem</a></li>
 
 		                            <li role="presentation" class="divider"> </li>
 		                            
-		                            @if(can('news.edit'))
-		                            	<li><a href="{{ route('admin.news.edit',['id' => $news_item->id]) }}"><i class="fa fa-pencil"></i> Sửa</a></li>
-		                            @endif
+		                            @can('admin.news.edit', $news_item)
+			                            @if(can('news.edit'))
+			                            	<li><a href="{{ route('admin.news.edit',['id' => $news_item->id]) }}"><i class="fa fa-pencil"></i> Sửa</a></li>
+			                            @endif
+			                        @endcan
 		                        	
-		                        	@if($news_item->isEnable())
-		                        		@if(can('news.disable'))
-		                        			<li><a data-function="disable" data-method="put" href="{{ route('admin.news.disable', ['id' => $news_item->id]) }}"><i class="fa fa-recycle"></i> Xóa tạm</a></li>
-		                        		@endif
-		                        	@endif
-
+		                        	@can('admin.news.disable', $news_item)
+			                        	@if($news_item->isEnable())
+			                        		@if(can('news.disable'))
+			                        			<li><a data-function="disable" data-method="put" href="{{ route('admin.news.disable', ['id' => $news_item->id]) }}"><i class="fa fa-recycle"></i> Xóa tạm</a></li>
+			                        		@endif
+			                        	@endif
+		                        	@endcan
+	
 		                            @if($news_item->isDisable())
-		                        		@if(can('news.enable'))
+		                        		@can('admin.news.enable', $news_item)
 		                            		<li><a data-function="enable" data-method="put" href="{{ route('admin.news.enable', ['id' => $news_item->id]) }}"><i class="fa fa-recycle"></i> Khôi phục</a></li>
-		                            	@endif
-
-		                            	@if(can('news.destroy'))
 		                            		<li role="presentation" class="divider"></li>
+		                            	@endcan
+
+		                            	@can('admin.news.destroy', $news_item)
 		                            		<li><a data-function="destroy" data-method="delete" href="{{ route('admin.news.destroy', ['id' => $news_item->id]) }}"><i class="fa fa-times"></i> Xóa</a></li>
-		                            	@endif
+		                            	@endcan
 		                        	@endif
 		                        </ul>
 		                    </div>

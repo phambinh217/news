@@ -12,11 +12,13 @@
 
 @if(isset($news_id))
     @section('page_sub_title', $news->title)
-    @section('tool_bar')
-        <a href="{{ route('admin.news.create') }}" class="btn btn-primary">
-            <i class="fa fa-plus"></i> <span class="hidden-xs">Thêm tin tức mới</span>
-        </a>
-    @endsection
+    @can('admin.news.create')
+        @section('tool_bar')
+            <a href="{{ route('admin.news.create') }}" class="btn btn-primary">
+                <i class="fa fa-plus"></i> <span class="hidden-xs">Thêm tin tức mới</span>
+            </a>
+        @endsection
+    @endcan
 @endif
 
 @section('content')

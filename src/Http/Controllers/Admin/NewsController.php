@@ -11,11 +11,14 @@ class NewsController extends AdminController
 {
     public function index()
     {
+        $this->authorize('news.index');
+
         $filter = News::getRequestFilter();
         $this->data['filter'] = $filter;
         $this->data['newses'] = News::ofQuery($filter)->paginate($this->paginate);
 
         \Metatag::set('title', 'Tất cả tin tức');
+        $this->authorize('admin.news.index');
         return view('News::admin.list', $this->data);
     }
 
@@ -26,16 +29,19 @@ class NewsController extends AdminController
         $news = new News();
         $this->data['news'] = $news;
         
+        $this->authorize('admin.news.create');
         return view('News::admin.save', $this->data);
     }
 
     public function store(Request $request)
     {
+        $this->authorize('admin.news.create');
+
         $this->validate($request, [
             'news.title'            =>    'required|max:255',
             'news.content'            =>    'min:0',
             'news.category_id'        =>    'required|exists:news_categories,id',
-            'news.status'            =>    'required|in:0,1',
+            'news.status'            =>    'required|in:enable,disable',
         ]);
 
         $news = new News();
@@ -44,11 +50,11 @@ class NewsController extends AdminController
         
         switch ($news->status) {
             case 'disable':
-                $news->status = '1';
+                $news->status = '0';
                 break;
 
             case 'enable':
-                $news->status = '2';
+                $news->status = '1';
                 break;
         }
 
@@ -79,13 +85,14 @@ class NewsController extends AdminController
     
     public function edit($id)
     {
-        \Metatag::set('title', 'Chỉnh sửa tin tức');
-
-        $news = News::find($id);
+        $news = News::findOrFail($id);
+        $this->authorize('news.edit', $news);
 
         $this->data['news_id']    = $id;
         $this->data['news']        = $news;
 
+        \Metatag::set('title', 'Chỉnh sửa tin tức');
+        $this->authorize('admin.news.edit', $news);
         return view('News::admin.save', $this->data);
     }
 
@@ -95,19 +102,22 @@ class NewsController extends AdminController
             'news.title'            =>    'required|max:255',
             'news.content'        =>    'min:0',
             'news.category_id'    =>    'required|exists:news_categories,id',
-            'news.status'            =>    'required|in:0,1',
+            'news.status'            =>    'required|in:enable,disable',
         ]);
 
         $news = News::find($id);
+        
+        $this->authorize('admin.news.edit', $news);
+
         $news->fill($request->news);
 
         switch ($news->status) {
             case 'disable':
-                $news->status = '1';
+                $news->status = '0';
                 break;
 
             case 'enable':
-                $news->status = '2';
+                $news->status = '1';
                 break;
         }
 
@@ -140,6 +150,7 @@ class NewsController extends AdminController
     public function disable(Request $request, $id)
     {
         $news = News::find($id);
+        $this->authorize('admin.news.disable', $news);
         $news->status = '0';
         $news->save();
         if ($request->ajax()) {
@@ -155,6 +166,7 @@ class NewsController extends AdminController
     public function enable(Request $request, $id)
     {
         $news = News::find($id);
+        $this->authorize('admin.news.enable', $news);
         $news->status = '1';
         $news->save();
         if ($request->ajax()) {
@@ -170,6 +182,7 @@ class NewsController extends AdminController
     public function destroy(Request $request, $id)
     {
         $news = News::find($id);
+        $this->authorize('admin.news.destroy', $news);
         $news->delete();
         
         if ($request->ajax()) {
