@@ -12,11 +12,11 @@
 @section('page_title', 'Tất cả tin tức')
 
 @section('tool_bar')
-	@if(can('news.create'))
+	@can('admin.news.create')
 		<a href="{{ route('admin.news.create') }}" class="btn btn-primary">
 			<i class="fa fa-plus"></i> <span class="hidden-xs">Thêm tin tức mới</span>
 		</a>
-	@endif
+	@endcan
 @endsection
 
 @section('content')
@@ -176,16 +176,12 @@
 		                            <li role="presentation" class="divider"> </li>
 		                            
 		                            @can('admin.news.edit', $news_item)
-			                            @if(can('news.edit'))
-			                            	<li><a href="{{ route('admin.news.edit',['id' => $news_item->id]) }}"><i class="fa fa-pencil"></i> Sửa</a></li>
-			                            @endif
+			                            <li><a href="{{ route('admin.news.edit',['id' => $news_item->id]) }}"><i class="fa fa-pencil"></i> Sửa</a></li>
 			                        @endcan
 		                        	
 		                        	@can('admin.news.disable', $news_item)
 			                        	@if($news_item->isEnable())
-			                        		@if(can('news.disable'))
-			                        			<li><a data-function="disable" data-method="put" href="{{ route('admin.news.disable', ['id' => $news_item->id]) }}"><i class="fa fa-recycle"></i> Xóa tạm</a></li>
-			                        		@endif
+			                        		<li><a data-function="disable" data-method="put" href="{{ route('admin.news.disable', ['id' => $news_item->id]) }}"><i class="fa fa-recycle"></i> Xóa tạm</a></li>
 			                        	@endif
 		                        	@endcan
 	

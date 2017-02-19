@@ -24,7 +24,6 @@ class CategoryController extends AdminController
         $this->data['categories']    = $category->ofQuery($filter)->paginate($this->paginate);
         $this->data['filter'] = $filter;
 
-        $this->authorize('admin.news.category.index');
         return view('News::admin.category.list', $this->data);
     }
 
@@ -39,7 +38,6 @@ class CategoryController extends AdminController
 
         $this->data['category'] = new Category();
 
-        $this->authorize('admin.news.category.create');
         return view('News::admin.category.save', $this->data);
     }
 
@@ -50,8 +48,6 @@ class CategoryController extends AdminController
      */
     public function store(Request $request)
     {
-        $this->authorize('admin.news.category.create');
-
         $this->validate($request, [
             'category.name'        => 'required|max:255',
             'category.slug'            => 'max:255',
@@ -90,14 +86,12 @@ class CategoryController extends AdminController
      * @param  int  $id
      * @return Response
      */
-    public function edit($id)
+    public function edit(Category $category)
     {
         \Metatag::set('title', 'Chỉnh sửa danh mục');
 
-        $category = Category::find($id);
         $this->data['category'] = $category;
-        $this->data['category_id'] = $id;
-        $this->authorize('admin.news.category.edit', $category);
+        $this->data['category_id'] = $category->id;
 
         return view('News::admin.category.save', $this->data);
     }
@@ -108,7 +102,7 @@ class CategoryController extends AdminController
      * @param  int  $id
      * @return Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Category $category)
     {
         $this->validate($request, [
             'category.name'        => 'required|max:255',
@@ -116,30 +110,28 @@ class CategoryController extends AdminController
             'category.description'    => 'max:300',
         ]);
 
-        $category = Category::find($id);
+        $category->fill($request->input('category'));
         
-        $this->authorize('admin.news.category.edit', $category);
-
-        $category->fill($request->category);
         if (empty($category->slug)) {
             $category->slug = str_slug($category->title);
         }
+
         $category->save();
 
         if ($request->ajax()) {
             $response = [
-                'title'        =>    'Thành công',
-                'message'    =>    'Thành công',
+                'title'      =>    'Thành công',
+                'message'    =>    'Đã cập nhật danh mục',
             ];
-            if (isset($request->save_and_out)) {
-                $response['redirect'] = admin_url('news/category');
+            if ($request->exists('save_and_out')) {
+                $response['redirect'] = route('admin.news.category.index');
             }
 
             return response()->json($response, 200);
         }
         
-        if (isset($request->save_and_out)) {
-            return redirect(admin_url('news/category'));
+        if ($request->exists('save_and_out')) {
+            return redirect()->route('admin.news.category.index');
         }
                 
         return redirect()->back();
@@ -151,12 +143,8 @@ class CategoryController extends AdminController
      * @param  int  $id
      * @return Response
      */
-    public function destroy(Request $request, $id)
+    public function destroy(Request $request, Category $category)
     {
-        $category = Category::find($id);
-        
-        $this->authorize('admin.news.category.destroy', $category);
-
         if ($category->newses()->count()) {
             if ($request->ajax()) {
                 return response()->json([
@@ -173,7 +161,7 @@ class CategoryController extends AdminController
         if ($request->ajax()) {
             return response()->json([
                 'title'            =>    'Thành công',
-                'message'        =>    'Thành công',
+                'message'        =>    'Đã xóa danh mục thành công',
             ], 200);
         }
 

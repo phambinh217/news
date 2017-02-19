@@ -40,13 +40,6 @@ class ModuleServiceProvider extends ServiceProvider
             include __DIR__ . '/../../helper/helper.php';
         }
 
-        // Load route
-        if (!$this->app->routesAreCached()) {
-            if (\File::exists(__DIR__ . '/../../routes.php')) {
-                include __DIR__ . '/../../routes.php';
-            }
-        }
-
         $this->registerPolicies();
     }
 
@@ -74,36 +67,49 @@ class ModuleServiceProvider extends ServiceProvider
     {
         \Module::registerFromJsonFile('appearance', __DIR__ .'/../../module.json');
         \Menu::registerType('Danh mục tin', \Phambinh\News\Models\Category::class);
+        $this->app->register(\Phambinh\News\Providers\RoutingServiceProvider::class);
+        $this->registerAdminMenu();
+    }
 
+    private function registerAdminMenu()
+    {
         add_action('admin.init', function () {
-            \AdminMenu::register('news', [
-                'parent'    =>  'main-manage',
-                'label'     =>  'Tin tức',
-                'url'       =>  admin_url('news'),
-                'icon'      =>  'icon-notebook',
-                'order' => '1',
-            ]);
+            if (\Auth::user()->can('admin.news.index')) {
+                \AdminMenu::register('news', [
+                    'parent'    =>  'main-manage',
+                    'label'     =>  'Tin tức',
+                    'url'       =>  route('admin.news.index'),
+                    'icon'      =>  'icon-notebook',
+                    'order' => '1',
+                ]);
+            }
 
-            \AdminMenu::register('news.create', [
-                'parent'    =>  'news',
-                'label'     =>  'Thêm tin tức mới',
-                'url'       =>  admin_url('news/create'),
-                'icon'      =>  'icon-note',
-            ]);
+            if (\Auth::user()->can('admin.news.create')) {
+                \AdminMenu::register('news.create', [
+                    'parent'    =>  'news',
+                    'label'     =>  'Thêm tin tức mới',
+                    'url'       =>  route('admin.news.create'),
+                    'icon'      =>  'icon-note',
+                ]);
+            }
 
-            \AdminMenu::register('news.all', [
-                'parent'    =>  'news',
-                'label'     =>  'Tất cả tin tức',
-                'url'       =>  admin_url('news'),
-                'icon'      =>  'icon-magnifier',
-            ]);
+            if (\Auth::user()->can('admin.news.index')) {
+                \AdminMenu::register('news.all', [
+                    'parent'    =>  'news',
+                    'label'     =>  'Tất cả tin tức',
+                    'url'       =>  route('admin.news.index'),
+                    'icon'      =>  'icon-magnifier',
+                ]);
+            }
 
-            \AdminMenu::register('news.category', [
-                'parent'    =>  'news',
-                'label'     =>  'Danh mục tin tức',
-                'url'       =>  admin_url('news/category'),
-                'icon'      =>  'icon-list',
-            ]);
+            if (\Auth::user()->can('admin.news.category.index')) {
+                \AdminMenu::register('news.category', [
+                    'parent'    =>  'news',
+                    'label'     =>  'Danh mục tin tức',
+                    'url'       =>  route('admin.news.category.index'),
+                    'icon'      =>  'icon-list',
+                ]);
+            }
         });
     }
 }

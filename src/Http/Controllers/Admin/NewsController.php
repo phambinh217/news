@@ -11,14 +11,11 @@ class NewsController extends AdminController
 {
     public function index()
     {
-        $this->authorize('news.index');
-
         $filter = News::getRequestFilter();
         $this->data['filter'] = $filter;
         $this->data['newses'] = News::ofQuery($filter)->paginate($this->paginate);
 
         \Metatag::set('title', 'Tất cả tin tức');
-        $this->authorize('admin.news.index');
         return view('News::admin.list', $this->data);
     }
 
@@ -29,14 +26,11 @@ class NewsController extends AdminController
         $news = new News();
         $this->data['news'] = $news;
         
-        $this->authorize('admin.news.create');
         return view('News::admin.save', $this->data);
     }
 
     public function store(Request $request)
     {
-        $this->authorize('admin.news.create');
-
         $this->validate($request, [
             'news.title'            =>    'required|max:255',
             'news.content'            =>    'min:0',
@@ -77,26 +71,22 @@ class NewsController extends AdminController
         }
 
         if (isset($request->save_only)) {
-            return redirect(route('admin.news.edit', ['id' => $news->id]));
+            return redirect()->route('admin.news.edit', ['id' => $news->id]);
         }
 
-        return redirect(route('admin.news.create'));
+        return redirect()->route('admin.news.create');
     }
     
-    public function edit($id)
+    public function edit(News $news)
     {
-        $news = News::findOrFail($id);
-        $this->authorize('news.edit', $news);
-
-        $this->data['news_id']    = $id;
-        $this->data['news']        = $news;
+        $this->data['news_id'] = $news->id;
+        $this->data['news']    = $news;
 
         \Metatag::set('title', 'Chỉnh sửa tin tức');
-        $this->authorize('admin.news.edit', $news);
         return view('News::admin.save', $this->data);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, News $news)
     {
         $this->validate($request, [
             'news.title'            =>    'required|max:255',
@@ -104,10 +94,6 @@ class NewsController extends AdminController
             'news.category_id'    =>    'required|exists:news_categories,id',
             'news.status'            =>    'required|in:enable,disable',
         ]);
-
-        $news = News::find($id);
-        
-        $this->authorize('admin.news.edit', $news);
 
         $news->fill($request->news);
 
@@ -131,7 +117,7 @@ class NewsController extends AdminController
         if ($request->ajax()) {
             $response = [
                 'title'        =>    'Thành công',
-                'message'    =>    'Thành công',
+                'message'    =>    'Cập nhật tin thành công',
             ];
             if (isset($request->save_and_out)) {
                 $response['redirect'] = admin_url('news');
@@ -147,48 +133,42 @@ class NewsController extends AdminController
         return redirect()->back();
     }
 
-    public function disable(Request $request, $id)
+    public function disable(Request $request, News $news)
     {
-        $news = News::find($id);
-        $this->authorize('admin.news.disable', $news);
         $news->status = '0';
         $news->save();
         if ($request->ajax()) {
             return response()->json([
                 'title'            =>    'Thành công',
-                'message'        =>    'Thành công',
+                'message'        =>    'Đã ẩn tin',
             ], 200);
         }
 
         return redirect()->back();
     }
 
-    public function enable(Request $request, $id)
+    public function enable(Request $request, News $news)
     {
-        $news = News::find($id);
-        $this->authorize('admin.news.enable', $news);
         $news->status = '1';
         $news->save();
         if ($request->ajax()) {
             return response()->json([
                 'title'            =>    'Thành công',
-                'message'        =>    'Thành công',
+                'message'        =>    'Đã công khai tin',
             ], 200);
         }
 
         return redirect()->back();
     }
 
-    public function destroy(Request $request, $id)
+    public function destroy(Request $request, News $news)
     {
-        $news = News::find($id);
-        $this->authorize('admin.news.destroy', $news);
         $news->delete();
         
         if ($request->ajax()) {
             return response()->json([
                 'title'            =>    'Thành công',
-                'message'        =>    'Thành công',
+                'message'        =>    'Đã xóa tin',
             ], 200);
         }
 
