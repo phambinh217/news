@@ -121,11 +121,11 @@
 						<th class="text-center">
 							{!! \Phambinh\News\Models\News::linkSort('Tên tin tức', 'title') !!}
 						</th>
-						<th class="text-center">
-							
+						<th>
+							Tác giả
 						</th>
-						<th class="text-center">
-							
+						<th>
+							Ngày tạo
 						</th>
 						<th class="text-center">Thao tác</th>
 					</tr>
@@ -151,13 +151,12 @@
 								<strong>{{ $news_item->title }}</strong>
 							@endcannot
 						</td>
-						<td class="text-center">
-							
+						<td>
+							{{ $news_item->author->full_name }}
 						</td>
-						<td class="text-center">
-							
+						<td>
+							{{ text_time_difference($news_item->created_at) }}
 						</td>
-
 						<td>
 							<div class="btn-group pull-right" table-function>
 								<a href="" class="btn btn-circle btn-xs grey-salsa btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
@@ -168,7 +167,6 @@
 									<span class="visible-xs">
 										<span class="fa fa-cog"> </span>
 									</span>
-									<span class="fa fa-angle-down"> </span>
 		                        </a>
 		                        <ul class="dropdown-menu pull-right">
 		                            <li><a href="{{ route('admin.news.show', ['id' => $news_item->id]) }}"><i class="fa fa-eye"></i> Xem</a></li>

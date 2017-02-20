@@ -13,7 +13,7 @@ class NewsController extends AdminController
     {
         $filter = News::getRequestFilter();
         $this->data['filter'] = $filter;
-        $this->data['newses'] = News::ofQuery($filter)->paginate($this->paginate);
+        $this->data['newses'] = News::ofQuery($filter)->with('author')->paginate($this->paginate);
 
         \Metatag::set('title', 'Tất cả tin tức');
         return view('News::admin.list', $this->data);
