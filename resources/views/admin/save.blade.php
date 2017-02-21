@@ -1,4 +1,4 @@
-@extends('Admin::layouts.default',[
+@extends('Cms::layouts.default',[
 	'active_admin_menu' 	=> ['news', isset($news_id) ? 'news.all' : 'news.create'],
 	'breadcrumbs' 			=> [
 		'title'	=> ['Tin tức', isset($news_id) ? 'Chỉnh sửa' : 'Thêm mới'],
@@ -80,7 +80,7 @@
                                 </label>
                                 <div class="col-md-10">
                                     @include('News::admin.components.form-checkbox-category', [
-                                        'categories' =>  Phambinh\News\Models\Category::get(),
+                                        'categories' =>  Packages\News\Category::get(),
                                         'name' => 'news[category_id][]',
                                         'checked' => $news->categories->pluck('id')->all(),
                                         'class' => 'width-auto',
@@ -92,7 +92,7 @@
                                     Thumbnail
                                 </label>
                                 <div class="col-sm-10">
-                                    @include('Admin::admin.components.form-chose-media', [
+                                    @include('Cms::components.form-chose-media', [
                                         'name'              => 'news[thumbnail]',
                                         'value'             => old('news.thumbnail', $news->thumbnailOrDefault()),
                                         'url_image_preview' => old('news.thumbnail', thumbnail_url($news->thumbnailOrDefault(), ['width' => '100', 'height' => '100']))
@@ -145,9 +145,9 @@
                     <div class="row">
                         <div class="col-md-offset-3 col-md-9">
                             @if(!isset($news_id))
-                                @include('Admin::admin.components.btn-save-new')
+                                @include('Cms::components.btn-save-new')
                             @else
-                                @include('Admin::admin.components.btn-save-out')
+                                @include('Cms::components.btn-save-out')
                             @endif
                         </div>
                     </div>

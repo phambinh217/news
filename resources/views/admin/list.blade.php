@@ -1,4 +1,4 @@
-@extends('Admin::layouts.default', [
+@extends('Cms::layouts.default', [
 	'active_admin_menu'	=> ['news', 'news.all'],
 	'breadcrumbs' 		=> [
 		'title'	=>	['Tin tức', 'Danh sách'],
@@ -42,7 +42,7 @@
 		                            <label class="control-label col-md-3">Category</label>
 		                            <div class="col-md-9">
 		                                @include('News::admin.components.form-select-category', [
-	                                		'categories' =>  Phambinh\News\Models\Category::get(),
+	                                		'categories' =>  Packages\News\Category::get(),
 	                                		'name' => 'category_id',
 	                                		'selected' => isset($filter['category_id']) ? $filter['category_id'] : '0',
 	                                	])
@@ -54,7 +54,7 @@
 		                            <label class="control-label col-md-3">Trạng thái</label>
 		                            <div class="col-md-9">
 		                            	@include('News::admin.components.form-select-status', [
-					                        'statuses' => Phambinh\News\Models\News::statusAble(),
+					                        'statuses' => Packages\News\News::statusAble(),
 					                        'name' => 'status',
 					                        'selected' => isset($filter['status']) ? $filter['status'] : null,
 					                    ])
@@ -63,7 +63,7 @@
 		                        <div class="form-group">
 		                            <label class="control-label col-md-3">Tác giả</label>
 		                            <div class="col-md-9">
-		                                @include('User::admin.components.form-find-user', [
+		                                @include('Cms::components.form-find-user', [
 		                            		'name' => 'author_id',
 		                            		'selected' => isset($filter['author_id']) ? $filter['author_id'] : '0',
 		                            	])
@@ -90,7 +90,7 @@
 	    <div class="row table-above">
 		    <div class="col-sm-6">
 		    	<div class="form-inline mb-10">
-			    	@include('Admin::admin.components.form-apply-action', [
+			    	@include('Cms::components.form-apply-action', [
 			    		'actions' => [
 			    			['action' => '', 'name' => ''],
 			    			['action' => '', 'name' => ''],
@@ -116,10 +116,10 @@
 									</div>
 						</th>
 						<th width="50" class="text-center">
-							{!! \Phambinh\News\Models\News::linkSort('ID', 'id') !!}
+							{!! \Packages\News\News::linkSort('ID', 'id') !!}
 						</th>
 						<th class="text-center">
-							{!! \Phambinh\News\Models\News::linkSort('Tên tin tức', 'title') !!}
+							{!! \Packages\News\News::linkSort('Tên tin tức', 'title') !!}
 						</th>
 						<th>
 							Tác giả

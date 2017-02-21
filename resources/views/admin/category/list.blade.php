@@ -1,4 +1,4 @@
-@extends('Admin::layouts.default', [
+@extends('Cms::layouts.default', [
 	'active_admin_menu'	=> ['news', 'news.category'],
 	'breadcrumbs'		=>	[
 		'title' => ['Tin tức', 'Danh mục'],
@@ -26,7 +26,7 @@
 	<div class="row table-above">
 		<div class="col-sm-6">
 			<div class="form-inline mb-10 apply-action">
-				@include('Admin::admin.components.form-apply-action', [
+				@include('Cms::components.form-apply-action', [
 					'actions' => [
 						['action' => '', 'name' => 'Xóa vĩnh viễn', 'method' => 'DELETE'],
 					],

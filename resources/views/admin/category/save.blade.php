@@ -1,4 +1,4 @@
-@extends('Admin::layouts.default',[
+@extends('Cms::layouts.default',[
 	'active_admin_menu' 	=> ['news', 'news.category'],
 	'breadcrumbs' 			=> [
 		'title'	=> ['Tin tức', 'Danh mục', isset($category_id) ? 'Thêm mới' : 'Chỉnh sửa'],
@@ -146,9 +146,9 @@
 			<div class="row">
 				<div class="col-md-offset-3 col-md-9">
 					@if(! isset($category_id))
-						@include('Admin::admin.components.btn-save-new')
+						@include('Cms::components.btn-save-new')
 					@else
-						@include('Admin::admin.components.btn-save-out')
+						@include('Cms::components.btn-save-out')
 					@endif
 				</div>
 			</div>
