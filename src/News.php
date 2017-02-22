@@ -1,6 +1,6 @@
 <?php
 
-namespace Packages\News;
+namespace Phambinh\News;
 
 use Phambinh\Laravel\Database\Traits\Query;
 use Phambinh\Laravel\Database\Traits\Metable;
@@ -69,12 +69,12 @@ class News extends Model implements Query
 
     public function categories()
     {
-        return $this->beLongsToMany('Packages\News\Category', 'news_to_category');
+        return $this->beLongsToMany('Phambinh\News\Category', 'news_to_category');
     }
 
     public function author()
     {
-        return $this->beLongsTo('Phambinh\Cms\User\Models\User');
+        return $this->beLongsTo('Phambinh\Cms\User');
     }
 
     public function scopeOfQuery($query, $args = [])

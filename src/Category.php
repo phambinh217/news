@@ -1,12 +1,12 @@
 <?php
 
-namespace Packages\News;
+namespace Phambinh\News;
 
 use Illuminate\Database\Eloquent\Model;
 use Phambinh\Laravel\Database\Traits\Query;
 use Phambinh\Laravel\Database\Traits\Metable;
 use Phambinh\Laravel\Database\Traits\Model as PhambinhModel;
-use Packages\Appearance\Support\Traits\NavigationMenu;
+use Phambinh\Appearance\Support\Traits\NavigationMenu;
 
 use Illuminate\Database\Eloquent\Builder;
 
@@ -45,7 +45,7 @@ class Category extends Model implements Query
 
     public function newses()
     {
-        return $this->beLongsToMany('Packages\News\News', 'news_to_category');
+        return $this->beLongsToMany('Phambinh\News\News', 'news_to_category');
     }
     
     public function thumbnailOrDefault()

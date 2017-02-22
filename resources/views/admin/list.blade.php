@@ -42,7 +42,7 @@
 		                            <label class="control-label col-md-3">Category</label>
 		                            <div class="col-md-9">
 		                                @include('News::admin.components.form-select-category', [
-	                                		'categories' =>  Packages\News\Category::get(),
+	                                		'categories' =>  Phambinh\News\Category::get(),
 	                                		'name' => 'category_id',
 	                                		'selected' => isset($filter['category_id']) ? $filter['category_id'] : '0',
 	                                	])
@@ -54,7 +54,7 @@
 		                            <label class="control-label col-md-3">Trạng thái</label>
 		                            <div class="col-md-9">
 		                            	@include('News::admin.components.form-select-status', [
-					                        'statuses' => Packages\News\News::statusAble(),
+					                        'statuses' => Phambinh\News\News::statusAble(),
 					                        'name' => 'status',
 					                        'selected' => isset($filter['status']) ? $filter['status'] : null,
 					                    ])
@@ -116,10 +116,10 @@
 									</div>
 						</th>
 						<th width="50" class="text-center">
-							{!! \Packages\News\News::linkSort('ID', 'id') !!}
+							{!! \Phambinh\News\News::linkSort('ID', 'id') !!}
 						</th>
 						<th class="text-center">
-							{!! \Packages\News\News::linkSort('Tên tin tức', 'title') !!}
+							{!! \Phambinh\News\News::linkSort('Tên tin tức', 'title') !!}
 						</th>
 						<th>
 							Tác giả
