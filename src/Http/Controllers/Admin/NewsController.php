@@ -1,11 +1,11 @@
 <?php
 
-namespace Phambinh\News\Http\Controllers\Admin;
+namespace Packages\News\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use AdminController;
 use Validator;
-use Phambinh\News\News;
+use Packages\News\News;
 
 class NewsController extends AdminController
 {

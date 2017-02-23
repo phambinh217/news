@@ -80,7 +80,7 @@
                                 </label>
                                 <div class="col-md-10">
                                     @include('News::admin.components.form-checkbox-category', [
-                                        'categories' =>  Phambinh\News\Category::get(),
+                                        'categories' =>  Packages\News\Category::get(),
                                         'name' => 'news[category_id][]',
                                         'checked' => $news->categories->pluck('id')->all(),
                                         'class' => 'width-auto',
