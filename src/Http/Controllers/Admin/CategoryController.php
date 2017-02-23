@@ -1,9 +1,9 @@
 <?php
 
-namespace Packages\News\Http\Controllers\Admin;
+namespace Phambinh\News\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use Packages\News\Category;
+use Phambinh\News\Category;
 use AdminController;
 use Validator;
 

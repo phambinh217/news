@@ -1,12 +1,12 @@
 <?php
 
-namespace Packages\News;
+namespace Phambinh\News;
 
-use Packages\Cms\Support\Traits\Query;
-use Packages\Cms\Support\Traits\Metable;
-use Packages\Cms\Support\Traits\Model as PhambinhModel;
+use Phambinh\Cms\Support\Traits\Query;
+use Phambinh\Cms\Support\Traits\Metable;
+use Phambinh\Cms\Support\Traits\Model as PhambinhModel;
 use Illuminate\Database\Eloquent\Model;
-use Packages\Cms\Support\Traits\Thumbnail;
+use Phambinh\Cms\Support\Traits\Thumbnail;
 
 class News extends Model implements Query
 {
@@ -70,12 +70,12 @@ class News extends Model implements Query
 
     public function categories()
     {
-        return $this->beLongsToMany('Packages\News\Category', 'news_to_category');
+        return $this->beLongsToMany('Phambinh\News\Category', 'news_to_category');
     }
 
     public function author()
     {
-        return $this->beLongsTo('Packages\Cms\User');
+        return $this->beLongsTo('Phambinh\Cms\User');
     }
 
     public function scopeOfQuery($query, $args = [])

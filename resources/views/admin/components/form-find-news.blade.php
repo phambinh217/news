@@ -1,6 +1,6 @@
 <select name="{{ $name }}" id="select2-button-addons-single-input-group-sm" class="form-control find-news">
      @if(isset($selected) && $selected)
-        <option value="{{ $selected }}" selected>{{ Packages\News\News::select('id', 'title')->find($selected)->title }}</option>
+        <option value="{{ $selected }}" selected>{{ Phambinh\News\News::select('id', 'title')->find($selected)->title }}</option>
     @endif
 </select>
 

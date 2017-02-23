@@ -1,13 +1,13 @@
 <?php
 
-namespace Packages\News;
+namespace Phambinh\News;
 
 use Illuminate\Database\Eloquent\Model;
-use Packages\Cms\Support\Traits\Query;
-use Packages\Cms\Support\Traits\Metable;
-use Packages\Cms\Support\Traits\Model as PhambinhModel;
-use Packages\Appearance\Support\Traits\NavigationMenu;
-use Packages\Cms\Support\Traits\Thumbnail;
+use Phambinh\Cms\Support\Traits\Query;
+use Phambinh\Cms\Support\Traits\Metable;
+use Phambinh\Cms\Support\Traits\Model as PhambinhModel;
+use Phambinh\Appearance\Support\Traits\NavigationMenu;
+use Phambinh\Cms\Support\Traits\Thumbnail;
 use Illuminate\Database\Eloquent\Builder;
 
 class Category extends Model implements Query
@@ -45,7 +45,7 @@ class Category extends Model implements Query
 
     public function newses()
     {
-        return $this->beLongsToMany('Packages\News\News', 'news_to_category');
+        return $this->beLongsToMany('Phambinh\News\News', 'news_to_category');
     }
 
     public function scopeOfQuery($query, $args = [])

@@ -1,10 +1,10 @@
 <?php 
 
-namespace Packages\News\Http\Controllers\Api;
+namespace Phambinh\News\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use ApiController;
-use Packages\News\News;
+use Phambinh\News\News;
 
 class NewsController extends ApiController
 {
