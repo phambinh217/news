@@ -11,7 +11,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Packages\\News\\": "src/"
+            "Phambinh\\News\\": "src/"
         }
     },
     "minimum-stability": "dev",
