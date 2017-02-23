@@ -6,10 +6,11 @@ use Phambinh\Laravel\Database\Traits\Query;
 use Phambinh\Laravel\Database\Traits\Metable;
 use Phambinh\Laravel\Database\Traits\Model as PhambinhModel;
 use Illuminate\Database\Eloquent\Model;
+use Phambinh\Cms\Support\Traits\Thumbnail;
 
 class News extends Model implements Query
 {
-    use PhambinhModel;
+    use PhambinhModel, Thumbnail;
     
     protected $table = 'newses';
 
@@ -130,15 +131,6 @@ class News extends Model implements Query
         }
 
         return null;
-    }
-
-    public function thumbnailOrDefault()
-    {
-        if (! empty($this->thumbnail)) {
-            return $this->thumbnail;
-        }
-
-        return setting('default-thumbnail');
     }
 
     public static function statusAble()

@@ -7,12 +7,12 @@ use Phambinh\Laravel\Database\Traits\Query;
 use Phambinh\Laravel\Database\Traits\Metable;
 use Phambinh\Laravel\Database\Traits\Model as PhambinhModel;
 use Phambinh\Appearance\Support\Traits\NavigationMenu;
-
+use Phambinh\Cms\Support\Traits\Thumbnail;
 use Illuminate\Database\Eloquent\Builder;
 
 class Category extends Model implements Query
 {
-    use PhambinhModel, NavigationMenu;
+    use PhambinhModel, NavigationMenu, Thumbnail;
 
     protected $table = 'news_categories';
 
@@ -46,15 +46,6 @@ class Category extends Model implements Query
     public function newses()
     {
         return $this->beLongsToMany('Phambinh\News\News', 'news_to_category');
-    }
-    
-    public function thumbnailOrDefault()
-    {
-        if (! empty($this->thumbnail)) {
-            return $this->thumbnail;
-        }
-
-        return setting('default-thumbnail');
     }
 
     public function scopeOfQuery($query, $args = [])
