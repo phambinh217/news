@@ -67,7 +67,6 @@ class ModuleServiceProvider extends ServiceProvider
     {
         \Module::registerFromJsonFile('appearance', __DIR__ .'/../../module.json');
         \Menu::registerType('Danh mục tin', \Phambinh\News\Category::class);
-        $this->app->register(\Phambinh\News\Providers\RoutingServiceProvider::class);
         $this->registerAdminMenu();
     }
 
