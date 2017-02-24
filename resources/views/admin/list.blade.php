@@ -169,9 +169,10 @@
 									</span>
 		                        </a>
 		                        <ul class="dropdown-menu pull-right">
-		                            <li><a href="{{ route('admin.news.show', ['id' => $news_item->id]) }}"><i class="fa fa-eye"></i> Xem</a></li>
-
-		                            <li role="presentation" class="divider"> </li>
+		                        	@if(Route::has('news.show'))
+		                            	<li><a href="{{ route('news.show', ['slug' => $news_item->slug, 'id' => $news_item->id]) }}"><i class="fa fa-eye"></i> Xem</a></li>
+		                            	<li role="presentation" class="divider"></li>
+		                            @endif
 		                            
 		                            @can('admin.news.edit', $news_item)
 			                            <li><a href="{{ route('admin.news.edit',['id' => $news_item->id]) }}"><i class="fa fa-pencil"></i> Sửa</a></li>

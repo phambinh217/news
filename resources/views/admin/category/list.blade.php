@@ -59,62 +59,10 @@
 					<th> Thao tác </th>
 				</tr>
 			</thead>
-			<tbody category-list>
-				@foreach($categories as $category_item)
-				<tr class="odd gradeX">
-					<td width="50" class="table-checkbox text-center">
-						<div class="checker">
-							<input type="checkbox" class="icheck" value="{{ $category_item->id }}">
-						</div>
-					</td>
-					<td class="text-center">
-						<strong>
-							{{ $category_item->id }}
-						</strong>
-					</td>
-					<td><img src="{{ thumbnail_url($category_item->thumbnailOrdefault(), ['height' => '70', 'width' => '70']) }}" /></td>
-					<td>
-						@can('admin.news.category.edit', $category_item)
-							<a href="{{ route('admin.news.category.edit', ['id' => $category_item->id]) }}">
-								<strong>
-									{{ $category_item->name }}
-								</strong>
-							</a>
-						@endcan
-
-						@cannot('admin.news.category.edit', $category_item)
-							<strong>
-								{{ $category_item->name }}
-							</strong>
-						@endcannot
-						({{ $category_item->newses()->count() }} tin tức)
-					</td>
-					<td>
-						{{ text_time_difference($category_item->created_at) }}
-					</td>
-					<td category-action>
-						<div class="btn-group" table-function>
-							<a href="" class="btn btn-circle btn-xs grey-salsa btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-								<span class="hidden-xs">
-									Chức năng
-									<span class="fa fa-angle-down"> </span>
-								</span>
-								<span class="visible-xs">
-									<span class="fa fa-cog"> </span>
-								</span>
-                            </a>
-                            <ul class="dropdown-menu pull-right">
-                            	@can('admin.news.category.edit', $category_item)
-                                	<li><a href="{{ route('admin.news.category.edit', ['id' => $category_item->id]) }}"><i class="fa fa-pencil"></i> Sửa</a></li>
-                                @endcan
-                                @can('admin.news.category.destroy', $category_item)
-                            		<li><a data-function="destroy" data-method="delete" href="{{ route('admin.news.category.destroy', ['id' => $category_item->id]) }}"><i class="fa fa-times"></i> Xóa</a></li>
-                            	@endcan
-                            </ul>
-                        </div>
-					</td>
-				</tr>
-				@endforeach
+			<tbody class="pb-items">
+				@include('News::admin.components.category-table-item', [
+					'categories' => $categories,
+				])
 			</tbody>
 		</table>
 	</div>
