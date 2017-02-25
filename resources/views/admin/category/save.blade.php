@@ -157,14 +157,14 @@
 @endsection
 
 @push('css')
-	<link href="{{ url('assets/admin/global/plugins/bootstrap-toastr/toastr.min.css')}}" rel="stylesheet" type="text/css" />
-	<link href="{{ url('assets/admin/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css') }}" rel="stylesheet" type="text/css" />
+	<link href="{{ asset_url('admin', 'global/plugins/bootstrap-toastr/toastr.min.css')}}" rel="stylesheet" type="text/css" />
+	<link href="{{ asset_url('admin', 'global/plugins/bootstrap-fileinput/bootstrap-fileinput.css') }}" rel="stylesheet" type="text/css" />
 @endpush
 
 @push('js_footer')
-	<script type="text/javascript" src="{{ url('assets/admin/global/plugins/jquery-form/jquery.form.min.js') }}"></script>
-	<script type="text/javascript" src="{{ url('assets/admin/global/plugins/bootstrap-toastr/toastr.min.js') }}"></script>
-	<script type="text/javascript" src="{{ url('assets/admin/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js') }}"></script>
+	<script type="text/javascript" src="{{ asset_url('admin', 'global/plugins/jquery-form/jquery.form.min.js') }}"></script>
+	<script type="text/javascript" src="{{ asset_url('admin', 'global/plugins/bootstrap-toastr/toastr.min.js') }}"></script>
+	<script type="text/javascript" src="{{ asset_url('admin', 'global/plugins/bootstrap-fileinput/bootstrap-fileinput.js') }}"></script>
 	<script type="text/javascript">
 		$('#create-slug').click(function() {
 			if(this.checked) {
