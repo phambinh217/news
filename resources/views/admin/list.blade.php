@@ -152,7 +152,7 @@
 							@endcannot
 						</td>
 						<td>
-							{{ $news_item->author->full_name }}
+							<img class="img-circle img-responsive" src="{{ thumbnail_url($news_item->author->avatarOrDefault(), ['width' =>50, 'height' => 50]) }}" alt="" /> {{ $news_item->author->full_name }}
 						</td>
 						<td>
 							{{ text_time_difference($news_item->created_at) }}
@@ -176,6 +176,7 @@
 		                            
 		                            @can('admin.news.edit', $news_item)
 			                            <li><a href="{{ route('admin.news.edit',['id' => $news_item->id]) }}"><i class="fa fa-pencil"></i> Sửa</a></li>
+			                            <li role="presentation" class="divider"></li>
 			                        @endcan
 		                        	
 		                        	@can('admin.news.disable', $news_item)
