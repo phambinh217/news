@@ -19,7 +19,7 @@
 					{{ $category_item->id }}
 				</strong>
 			</td>
-			<td><img src="{{ thumbnail_url($category_item->thumbnailOrDefault(), ['height' => '70', 'width' => '70']) }}" /></td>
+			<td><img src="{{ thumbnail_url($category_item->thumbnail, ['height' => '70', 'width' => '70']) }}" /></td>
 			<td>
 				@can('admin.ecommerce.category.edit', $category_item)
 					<a href="{{ route('admin.ecommerce.category.edit', ['id' => $category_item->id]) }}">

@@ -94,8 +94,8 @@
                                 <div class="col-sm-10">
                                     @include('Cms::components.form-chose-media', [
                                         'name'              => 'news[thumbnail]',
-                                        'value'             => old('news.thumbnail', $news->thumbnailOrDefault()),
-                                        'url_image_preview' => old('news.thumbnail', thumbnail_url($news->thumbnailOrDefault(), ['width' => '100', 'height' => '100']))
+                                        'value'             => old('news.thumbnail', $news->thumbnail),
+                                        'url_image_preview' => old('news.thumbnail', thumbnail_url($news->thumbnail, ['width' => '100', 'height' => '100']))
                                     ])
                                 </div>
                             </div>

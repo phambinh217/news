@@ -116,7 +116,7 @@
                                             @if(old('category.thumbnail'))
                                                 <img src="{{old('category.thumbnail')}}" class="image-preview" />
                                             @else
-                                                <img src="{{ $category->thumbnailOrDefault() }}" class="image-preview" />
+                                                <img src="{{ $category->thumbnail }}" class="image-preview" />
                                             @endif
                                         </div>
                                         <div class="fileinput-preview fileinput-exists"></div>
