@@ -152,7 +152,7 @@
 							@endcannot
 						</td>
 						<td>
-							<img class="img-circle img-responsive" src="{{ thumbnail_url($news_item->author->avatar, ['width' =>50, 'height' => 50]) }}" alt="" /> {{ $news_item->author->full_name }}
+							<img class="img-circle" style="width: 30px;" src="{{ thumbnail_url($news_item->author->avatar, ['width' =>50, 'height' => 50]) }}" alt="" /> {{ $news_item->author->full_name }}
 						</td>
 						<td>
 							{{ text_time_difference($news_item->created_at) }}
