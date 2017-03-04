@@ -54,7 +54,7 @@
 						{!! $category->linkSort('Tên danh mục', 'title') !!}
 					</th>
 					<th>
-						{!! $category->linkSort('Ngày tạo', 'created_at') !!}
+						{!! $category->linkSort('Ngày cập nhật', 'updated_at') !!}
 					</th>
 					<th> Thao tác </th>
 				</tr>

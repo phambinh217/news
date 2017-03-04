@@ -7,10 +7,11 @@ use Phambinh\Cms\Support\Traits\Metable;
 use Phambinh\Cms\Support\Traits\Model as PhambinhModel;
 use Illuminate\Database\Eloquent\Model;
 use Phambinh\Cms\Support\Traits\Thumbnail;
+use Phambinh\Cms\Support\Traits\SEO;
 
 class News extends Model implements Query
 {
-    use PhambinhModel, Thumbnail;
+    use PhambinhModel, Thumbnail, SEO;
     
     protected $table = 'newses';
 
@@ -28,6 +29,7 @@ class News extends Model implements Query
         'status',
         'thumbnail',
         'created_at',
+        'updated_at',
         'meta_title',
         'meta_description',
         'meta_keyword',
@@ -55,7 +57,7 @@ class News extends Model implements Query
      */
     protected static $defaultOfQuery = [
         'status'        => 'enable',
-        'orderby'        =>    'created_at.desc',
+        'orderby'       => 'updated_at.desc',
     ];
 
     protected static $statusAble = [
@@ -64,8 +66,8 @@ class News extends Model implements Query
     ];
 
     protected static $searchFields = [
-        'news.id',
-        'news.title',
+        'newses.id',
+        'newses.title',
     ];
 
     public function categories()
@@ -80,6 +82,7 @@ class News extends Model implements Query
 
     public function scopeOfQuery($query, $args = [])
     {
+        $args = $this->defaultParams($args);
         $query->baseQuery($args);
 
         if (! empty($args['status'])) {
@@ -95,7 +98,7 @@ class News extends Model implements Query
         }
 
         if (! empty($args['_keyword'])) {
-            $query->querySearch($args['_keyword']);
+            $query->search($args['_keyword']);
         }
 
         if (! empty($args['author_id'])) {
@@ -173,5 +176,28 @@ class News extends Model implements Query
     public function markAsDisable()
     {
         $this->where('id', $this->id)->update(['status' => '0']);
+    }
+
+    public function getSubContentAttribute($value)
+    {
+        if (!empty($value)) {
+            return $value;
+        }
+
+        if (!empty($this->content)) {
+            return str_limit(strip_tags($this->content), 150);
+        }
+
+        return null;
+    }
+
+    public function getStatusSlugAttribute()
+    {
+        return $this->statusAble()[$this->status]['slug'];
+    }
+
+    public function getStatusNameAttribute()
+    {
+        return $this->statusAble()[$this->status]['name'];
     }
 }

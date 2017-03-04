@@ -36,7 +36,7 @@
 				({{ $category_item->newses->count() }} tin)
 			</td>
 			<td class="hidden-xs">
-				{{ text_time_difference($category_item->created_at) }}
+				{{ text_time_difference($category_item->updated_at) }}
 			</td>
 			<td>
 				<div class="btn-group" table-function>

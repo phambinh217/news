@@ -9,10 +9,11 @@ use Phambinh\Cms\Support\Traits\Model as PhambinhModel;
 use Phambinh\Appearance\Support\Traits\NavigationMenu;
 use Phambinh\Cms\Support\Traits\Thumbnail;
 use Illuminate\Database\Eloquent\Builder;
+use Phambinh\Cms\Support\Traits\SEO;
 
 class Category extends Model implements Query
 {
-    use PhambinhModel, NavigationMenu, Thumbnail;
+    use PhambinhModel, NavigationMenu, Thumbnail, SEO;
 
     protected $table = 'news_categories';
 
@@ -30,6 +31,8 @@ class Category extends Model implements Query
         'meta_title',
         'meta_description',
         'meta_keyword',
+        'created_at',
+        'updated_at',
     ];
 
     protected static $requestFilter = [
@@ -40,7 +43,7 @@ class Category extends Model implements Query
     ];
 
     protected static $defaultOfQuery = [
-        'orderby'       => 'id.desc',
+        'orderby'       => 'updated_at.desc',
     ];
 
     public function newses()
@@ -50,6 +53,7 @@ class Category extends Model implements Query
 
     public function scopeOfQuery($query, $args = [])
     {
+        $args = $this->defaultParams($args);
         $query->baseQuery($args);
     }
 
@@ -58,12 +62,15 @@ class Category extends Model implements Query
         $query->where('id', '!=', $this->id)->where('parent_id', '!=', $this->id);
     }
 
-    public function menuUrl()
+    public function getMenuUrlAttribute()
     {
-        return 'url';
+        if (\Route::has('news.category')) {
+            return route('news.category', ['slug' => $this->slug, 'id' => $this->id]);
+        }
+        return url($this->slug);
     }
 
-    public function menuTitle()
+    public function getMenuTitleAttribute()
     {
         return $this->name;
     }
