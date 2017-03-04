@@ -65,6 +65,12 @@ class News extends Model implements Query
         ['slug' => 'enable', 'name' => 'Công khai'],
     ];
 
+    /**
+     * Trạng thái mặc định
+     * @var string
+     */
+    protected static $defaultStatus = 'enable';
+
     protected static $searchFields = [
         'newses.id',
         'newses.title',
@@ -117,17 +123,15 @@ class News extends Model implements Query
 
     public function isEnable()
     {
-        $statusCode = $this->status;
-        return $statusCode == '1';
+        return $this->status == 1;
     }
 
     public function isDisable()
     {
-        $statusCode = $this->status;
-        return $statusCode == '0';
+        return $this->status == 0;
     }
 
-    public function statusHtmlClass()
+    public function getHtmlClassAttribute()
     {
         if ($this->status == '0') {
             return 'bg-danger';
@@ -136,9 +140,14 @@ class News extends Model implements Query
         return null;
     }
 
-    public static function statusAble()
+    public static function getStatusAble()
     {
         return self::$statusAble;
+    }
+
+    public static function getDefaultStatus()
+    {
+        return self::$defaultStatus;
     }
 
     public function scopeEnable($query)
@@ -161,11 +170,6 @@ class News extends Model implements Query
     public function scopeDisable($query)
     {
         return $query->where('status', '0');
-    }
-
-    public function scopePending($query)
-    {
-        return $query->where('status', '3');
     }
 
     public function markAsEnable()
@@ -191,13 +195,30 @@ class News extends Model implements Query
         return null;
     }
 
+    public function setStatusAttribute($value)
+    {
+        switch ($value) {
+            case 'disable':
+                $this->attributes['status'] = '0';
+                break;
+
+            case 'enable':
+                $this->attributes['status'] = '1';
+                break;
+        }
+    }
+
     public function getStatusSlugAttribute()
     {
-        return $this->statusAble()[$this->status]['slug'];
+        if (! is_null($this->status)) {
+            return $this->getStatusAble()[$this->status]['slug'];
+        }
+
+        return $this->getDefaultStatus();
     }
 
     public function getStatusNameAttribute()
     {
-        return $this->statusAble()[$this->status]['name'];
+        return $this->getStatusAble()[$this->status]['name'];
     }
 }

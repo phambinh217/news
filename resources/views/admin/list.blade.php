@@ -54,7 +54,7 @@
 		                            <label class="control-label col-md-3">Trạng thái</label>
 		                            <div class="col-md-9">
 		                            	@include('News::admin.components.form-select-status', [
-					                        'statuses' => Phambinh\News\News::statusAble(),
+					                        'statuses' => Phambinh\News\News::getStatusAble(),
 					                        'name' => 'status',
 					                        'selected' => isset($filter['status']) ? $filter['status'] : null,
 					                    ])
@@ -132,7 +132,7 @@
 				</thead>
 				<tbody>
 					@foreach($newses as $news_item)
-					<tr class="odd gradeX hover-display-container {{ $news_item->statusHtmlClass() }}">
+					<tr class="odd gradeX hover-display-container {{ $news_item->html_class }}">
 						<td width="50" class="table-checkbox text-center">
 							<div class="checker">
 								<input type="checkbox" class="icheck" value="{{ $news_item->id }}">

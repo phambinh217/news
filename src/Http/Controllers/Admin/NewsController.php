@@ -41,16 +41,6 @@ class NewsController extends AdminController
         $news = new News();
 
         $news->fill($request->news);
-        
-        switch ($news->status) {
-            case 'disable':
-                $news->status = '0';
-                break;
-
-            case 'enable':
-                $news->status = '1';
-                break;
-        }
 
         if (empty($news->slug)) {
             $news->slug = str_slug($news->title);
@@ -97,20 +87,10 @@ class NewsController extends AdminController
 
         $news->fill($request->news);
 
-        switch ($news->status) {
-            case 'disable':
-                $news->status = '0';
-                break;
-
-            case 'enable':
-                $news->status = '1';
-                break;
-        }
-
         if (empty($news->slug)) {
             $news->slug = str_slug($news->title);
         }
-        
+
         $news->save();
         $news->categories()->sync((array) $request->news['category_id']);
 
