@@ -39,7 +39,7 @@
 		                            </div>
 		                        </div>
 		                        <div class="form-group">
-		                            <label class="control-label col-md-3">Category</label>
+		                            <label class="control-label col-md-3">Danh mục</label>
 		                            <div class="col-md-9">
 		                                @include('News::admin.components.form-select-category', [
 	                                		'categories' =>  Phambinh\News\Category::get(),

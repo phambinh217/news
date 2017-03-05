@@ -21,7 +21,7 @@
 @endif
 
 @section('content')
-	<form ajax-form-container action="{{ isset($category_id) ? route('admin.news.category.show', ['id' => $category->id])  : admin_url('news/category') }}" method="post" class="form-horizontal form-bordered form-row-stripped">
+	<form action="{{ isset($category_id) ? route('admin.news.category.show', ['id' => $category->id])  : admin_url('news/category') }}" method="post" class="form-horizontal form-bordered form-row-stripped ajax-form">
 		@if(isset($category_id))
 			<input type="hidden" name="_method" value="PUT" />
 		@endif

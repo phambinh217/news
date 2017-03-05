@@ -39,7 +39,7 @@
 				{{ text_time_difference($category_item->updated_at) }}
 			</td>
 			<td>
-				<div class="btn-group" table-function>
+				<div class="btn-group">
 					<a href="" class="btn btn-circle btn-xs grey-salsa btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
 						<span class="hidden-xs">
 							Chức năng
