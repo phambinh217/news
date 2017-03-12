@@ -1,19 +1,23 @@
 <?php
 
-namespace Phambinh\News;
+namespace Packages\News;
 
-use Phambinh\Cms\Support\Traits\Query;
-use Phambinh\Cms\Support\Traits\Metable;
-use Phambinh\Cms\Support\Traits\Model as PhambinhModel;
 use Illuminate\Database\Eloquent\Model;
-use Phambinh\Cms\Support\Traits\Thumbnail;
-use Phambinh\Cms\Support\Traits\SEO;
+use Packages\Cms\Support\Traits\Filter;
+use Packages\Cms\Support\Traits\Thumbnail;
+use Packages\Cms\Support\Traits\SEO;
+use Packages\Cms\Support\Traits\Hierarchical;
+use Packages\Cms\Support\Traits\Author;
+use Packages\Cms\Support\Traits\Status;
+use Packages\Cms\Support\Traits\Slug;
 
-class News extends Model implements Query
+class News extends Model
 {
-    use PhambinhModel, Thumbnail, SEO;
+    use Filter, Thumbnail, SEO, Author, Hierarchical, Status, Slug;
     
     protected $table = 'newses';
+
+    protected $primaryKey = 'id';
 
     /**
      * The attributes that are mass assignable.
@@ -28,8 +32,6 @@ class News extends Model implements Query
         'author_id',
         'status',
         'thumbnail',
-        'created_at',
-        'updated_at',
         'meta_title',
         'meta_description',
         'meta_keyword',
@@ -40,14 +42,12 @@ class News extends Model implements Query
      *
      * @var array
      */
-    protected static $requestFilter = [
+    protected static $filterable = [
         'id' => '',
         'title' => '',
         'status' => 'in:pending,enable,disable',
         'time_status' => 'in:coming,enable,disable',
         'category_id' => 'integer',
-        'orderby' => '',
-        '_keyword' => '',
     ];
 
     /**
@@ -55,41 +55,28 @@ class News extends Model implements Query
      *
      * @var array
      */
-    protected static $defaultOfQuery = [
-        'status'        => 'enable',
-        'orderby'       => 'updated_at.desc',
+    protected static $defaultFilter = [
+        'status'            => 'enable',
+        '_orderby'          => 'updated_at',
+        '_sort'             => 'desc',
     ];
 
-    protected static $statusAble = [
-        ['slug' => 'disable', 'name' => 'Xóa tạm'],
-        ['slug' => 'enable', 'name' => 'Công khai'],
-    ];
-
-    /**
-     * Trạng thái mặc định
-     * @var string
-     */
-    protected static $defaultStatus = 'enable';
-
-    protected static $searchFields = [
-        'newses.id',
-        'newses.title',
-    ];
+    protected $searchable = ['id', 'title'];
 
     public function categories()
     {
-        return $this->beLongsToMany('Phambinh\News\Category', 'news_to_category');
+        return $this->beLongsToMany('Packages\News\Category', 'news_to_category');
     }
 
     public function author()
     {
-        return $this->beLongsTo('Phambinh\Cms\User');
+        return $this->beLongsTo('Packages\Cms\User');
     }
 
-    public function scopeOfQuery($query, $args = [])
+    public function scopeApplyFilter($query, $args = [])
     {
-        $args = $this->defaultParams($args);
-        $query->baseQuery($args);
+        $args = array_merge(self::$defaultFilter, $args);
+        $query->baseFilter($args);
 
         if (! empty($args['status'])) {
             switch ($args['status']) {
@@ -101,10 +88,6 @@ class News extends Model implements Query
                     $query->disable();
                     break;
             }
-        }
-
-        if (! empty($args['_keyword'])) {
-            $query->search($args['_keyword']);
         }
 
         if (! empty($args['author_id'])) {
@@ -121,67 +104,6 @@ class News extends Model implements Query
         }
     }
 
-    public function isEnable()
-    {
-        return $this->status == 1;
-    }
-
-    public function isDisable()
-    {
-        return $this->status == 0;
-    }
-
-    public function getHtmlClassAttribute()
-    {
-        if ($this->status == '0') {
-            return 'bg-danger';
-        }
-
-        return null;
-    }
-
-    public static function getStatusAble()
-    {
-        return self::$statusAble;
-    }
-
-    public static function getDefaultStatus()
-    {
-        return self::$defaultStatus;
-    }
-
-    public function scopeEnable($query)
-    {
-        return $query->where('status', '1');
-    }
-
-    public function scopeSearch($query, $keyword)
-    {
-        $keyword = str_keyword($keyword);
-        foreach (self::$searchFields as $index => $field) {
-            if ($index == 0) {
-                $query->where($field, 'like', $keyword);
-            } else {
-                $query->orWhere($field, 'like', $keyword);
-            }
-        }
-    }
-
-    public function scopeDisable($query)
-    {
-        return $query->where('status', '0');
-    }
-
-    public function markAsEnable()
-    {
-        $this->where('id', $this->id)->update(['status' => '1']);
-    }
-
-    public function markAsDisable()
-    {
-        $this->where('id', $this->id)->update(['status' => '0']);
-    }
-
     public function getSubContentAttribute($value)
     {
         if (!empty($value)) {
@@ -193,32 +115,5 @@ class News extends Model implements Query
         }
 
         return null;
-    }
-
-    public function setStatusAttribute($value)
-    {
-        switch ($value) {
-            case 'disable':
-                $this->attributes['status'] = '0';
-                break;
-
-            case 'enable':
-                $this->attributes['status'] = '1';
-                break;
-        }
-    }
-
-    public function getStatusSlugAttribute()
-    {
-        if (! is_null($this->status)) {
-            return $this->getStatusAble()[$this->status]['slug'];
-        }
-
-        return $this->getDefaultStatus();
-    }
-
-    public function getStatusNameAttribute()
-    {
-        return $this->getStatusAble()[$this->status]['name'];
     }
 }

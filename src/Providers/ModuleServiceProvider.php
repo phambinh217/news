@@ -5,9 +5,9 @@
  * Description: This is the first file run of module. You can assign bootstrap or register module services
  * @author: noname
  * @version: 1.0
- * @package: PhambinhCMS
+ * @package: PackagesCMS
  */
-namespace Phambinh\News\Providers;
+namespace Packages\News\Providers;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -33,6 +33,10 @@ class ModuleServiceProvider extends ServiceProvider
         }
 
         $this->publishes([
+            __DIR__.'/../../publishes/resources' => resource_path(),
+        ], 'resource');
+        
+        $this->publishes([
             __DIR__.'/../../publishes/database/migrations' => database_path('migrations'),
         ], 'migration');
 
@@ -41,17 +45,17 @@ class ModuleServiceProvider extends ServiceProvider
 
     public function registerPolicies()
     {
-        \AccessControl::define('Tin tức - Xem danh sách tin', 'admin.news.index');
-        \AccessControl::define('Tin tức - Thêm tin', 'admin.news.create');
-        \AccessControl::define('Tin tức - Sửa tin', 'admin.news.edit');
-        \AccessControl::define('Tin tức - Ẩn tin', 'admin.news.disable');
-        \AccessControl::define('Tin tức - Công khai thin', 'admin.news.enable');
-        \AccessControl::define('Tin tức - Xóa tin', 'admin.news.destroy');
+        \AccessControl::define(trans('news.news') .' - '. trans('news.list-news'), 'admin.news.index');
+        \AccessControl::define(trans('news.news') .' - '. trans('news.add-new-news'), 'admin.news.create');
+        \AccessControl::define(trans('news.news') .' - '. trans('news.edit-news'), 'admin.news.edit');
+        \AccessControl::define(trans('news.news') .' - '. trans('news.disable-news'), 'admin.news.disable');
+        \AccessControl::define(trans('news.news') .' - '. trans('news.enable-news'), 'admin.news.enable');
+        \AccessControl::define(trans('news.news') .' - '. trans('news.destroy-news'), 'admin.news.destroy');
 
-        \AccessControl::define('Tin tức - Xem danh sách danh mục', 'admin.news.category.index');
-        \AccessControl::define('Tin tức - Thêm danh mục mới', 'admin.news.category.create');
-        \AccessControl::define('Tin tức - Sửa danh mục', 'admin.news.category.edit');
-        \AccessControl::define('Tin tức - Xóa danh mục', 'admin.news.category.destroy');
+        \AccessControl::define(trans('news.news') .' - '. trans('news.category.list-category'), 'admin.news.category.index');
+        \AccessControl::define(trans('news.news') .' - '. trans('news.category.add-new-category'), 'admin.news.category.create');
+        \AccessControl::define(trans('news.news') .' - '. trans('news.category.edit-category'), 'admin.news.category.edit');
+        \AccessControl::define(trans('news.news') .' - '. trans('news.category.destroy'), 'admin.news.category.destroy');
     }
 
     /**
@@ -62,7 +66,7 @@ class ModuleServiceProvider extends ServiceProvider
     public function register()
     {
         \Module::registerFromJsonFile('appearance', __DIR__ .'/../../module.json');
-        \Menu::registerType('Danh mục tin', \Phambinh\News\Category::class);
+        \Menu::registerType('Danh mục tin', \Packages\News\Category::class);
         $this->registerAdminMenu();
     }
 
@@ -72,7 +76,7 @@ class ModuleServiceProvider extends ServiceProvider
             if (\Auth::user()->can('admin.news.index')) {
                 \AdminMenu::register('news', [
                     'parent'    =>  'main-manage',
-                    'label'     =>  'Tin tức',
+                    'label'     =>  trans('news.news'),
                     'url'       =>  route('admin.news.index'),
                     'icon'      =>  'icon-notebook',
                     'order' => '1',
@@ -82,7 +86,7 @@ class ModuleServiceProvider extends ServiceProvider
             if (\Auth::user()->can('admin.news.create')) {
                 \AdminMenu::register('news.create', [
                     'parent'    =>  'news',
-                    'label'     =>  'Thêm tin tức mới',
+                    'label'     =>  trans('news.add-new-news'),
                     'url'       =>  route('admin.news.create'),
                     'icon'      =>  'icon-note',
                 ]);
@@ -91,7 +95,7 @@ class ModuleServiceProvider extends ServiceProvider
             if (\Auth::user()->can('admin.news.index')) {
                 \AdminMenu::register('news.all', [
                     'parent'    =>  'news',
-                    'label'     =>  'Tất cả tin tức',
+                    'label'     =>  trans('news.list-news'),
                     'url'       =>  route('admin.news.index'),
                     'icon'      =>  'icon-magnifier',
                 ]);
@@ -100,7 +104,7 @@ class ModuleServiceProvider extends ServiceProvider
             if (\Auth::user()->can('admin.news.category.index')) {
                 \AdminMenu::register('news.category', [
                     'parent'    =>  'news',
-                    'label'     =>  'Danh mục tin tức',
+                    'label'     =>  trans('news.category.category'),
                     'url'       =>  route('admin.news.category.index'),
                     'icon'      =>  'icon-list',
                 ]);

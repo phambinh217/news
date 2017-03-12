@@ -1,21 +1,23 @@
 <?php
 
-namespace Phambinh\News;
+namespace Packages\News;
 
 use Illuminate\Database\Eloquent\Model;
-use Phambinh\Cms\Support\Traits\Query;
-use Phambinh\Cms\Support\Traits\Metable;
-use Phambinh\Cms\Support\Traits\Model as PhambinhModel;
-use Phambinh\Appearance\Support\Traits\NavigationMenu;
-use Phambinh\Cms\Support\Traits\Thumbnail;
+use Packages\Cms\Support\Traits\Filter;
+use Packages\Appearance\Support\Traits\NavigationMenu;
+use Packages\Cms\Support\Traits\Thumbnail;
 use Illuminate\Database\Eloquent\Builder;
-use Phambinh\Cms\Support\Traits\SEO;
+use Packages\Cms\Support\Traits\SEO;
+use Packages\Cms\Support\Traits\Hierarchical;
+use Packages\Cms\Support\Traits\Slug;
 
-class Category extends Model implements Query
+class Category extends Model
 {
-    use PhambinhModel, NavigationMenu, Thumbnail, SEO;
+    use Filter, NavigationMenu, Thumbnail, SEO, Hierarchical, Slug;
 
     protected $table = 'news_categories';
+
+    protected $primaryKey = 'id';
 
     /**
      * The attributes that are mass assignable.
@@ -23,43 +25,41 @@ class Category extends Model implements Query
      * @var array
      */
     protected $fillable = [
-        'id',
         'name',
         'slug',
         'parent_id',
-        'group',
         'meta_title',
         'meta_description',
         'meta_keyword',
-        'created_at',
-        'updated_at',
     ];
 
-    protected static $requestFilter = [
+    protected static $filterable = [
         'id'  => 'integer',
-        'limit' => '',
-        'offset' => '',
-        'orderby' => '',
+        'name' => 'max:255',
+
+        '_orderby'      => 'in:id,name,created_at,updated_at',
+        '_sort'         => 'in:asc,desc',
+        '_keyword'      => 'max:255',
+        '_limit'        => 'integer',
+        '_offset'       => 'integer',
     ];
 
-    protected static $defaultOfQuery = [
-        'orderby'       => 'updated_at.desc',
+    protected static $defaultFilter = [
+        '_orderby'          => 'updated_at',
+        '_sort'             => 'desc',
     ];
+
+    protected $searchable = ['id', 'name', 'meta_keyword'];
 
     public function newses()
     {
-        return $this->beLongsToMany('Phambinh\News\News', 'news_to_category');
+        return $this->beLongsToMany('Packages\News\News', 'news_to_category');
     }
 
-    public function scopeOfQuery($query, $args = [])
+    public function scopeApplyFilter($query, $args = [])
     {
-        $args = $this->defaultParams($args);
-        $query->baseQuery($args);
-    }
-
-    public function scopeOfParentAble($query)
-    {
-        $query->where('id', '!=', $this->id)->where('parent_id', '!=', $this->id);
+        $args = array_merge(self::$defaultFilter, $args);
+        $query->baseFilter($args);
     }
 
     public function getMenuUrlAttribute()

@@ -1,8 +1,9 @@
 <?php
 
-namespace Phambinh\News;
+namespace Packages\News;
 
 use Illuminate\Database\Eloquent\Model;
+use Packages\Cms\Support\Traits\Filter;
 
 class NewsToCategory extends Model
 {
@@ -11,7 +12,6 @@ class NewsToCategory extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = [
-        'id',
         'news_id',
         'category_id',
     ];

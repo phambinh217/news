@@ -1,10 +1,10 @@
 <?php 
 
-namespace Phambinh\News\Http\Controllers\Api;
+namespace Packages\News\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use ApiController;
-use Phambinh\News\News;
+use Packages\News\News;
 
 class NewsController extends ApiController
 {
@@ -12,7 +12,7 @@ class NewsController extends ApiController
     {
         $news = new News();
         $filter = $news->getRequestFilter();
-        $res = $news->ofQuery($filter)
+        $res = $news->applyFilter($filter)
             ->select('newses.*', 'news_meta.value as thumbnail', 'users.first_name as trainer_first_name', 'users.last_name as trainer_last_name')
             ->addSelect(\DB::raw('count(classes.id) as total_student'))
             ->leftjoin('news_meta', 'newses.id', '=', 'news_meta.news_id')

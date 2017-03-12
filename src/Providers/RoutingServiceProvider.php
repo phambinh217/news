@@ -1,6 +1,6 @@
 <?php 
 
-namespace Phambinh\News\Providers;
+namespace Packages\News\Providers;
 
 use Illuminate\Support\Facades\Route;
 use App\Providers\RouteServiceProvider as ServiceProvider;
@@ -21,11 +21,11 @@ class RoutingServiceProvider extends ServiceProvider
 
         if (!$this->app->routesAreCached()) {
             if (\File::exists(__DIR__ . '/../../routes/web.php')) {
-                include __DIR__ . '/../../routes/web.php';
+                $this->loadRoutesFrom(__DIR__ . '/../../routes/web.php');
             }
 
             if (\File::exists(__DIR__ . '/../../routes/api.php')) {
-                include __DIR__ . '/../../routes/api.php';
+                $this->loadRoutesFrom(__DIR__ . '/../../routes/api.php');
             }
 
             if (\File::exists(__DIR__ . '/../../routes/console.php')) {

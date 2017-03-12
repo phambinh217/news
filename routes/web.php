@@ -1,18 +1,6 @@
-<?php 
-/**
- * ModuleAlias: news
- * ModuleName: news
- * Description: Route of module news.This bellow have 3 type route: normal rotue, admin route, api route
- * to use, you have to uncommnet it
- * @author: noname
- * @version: 1.0
- * @package: PhambinhCMS
- */
+<?php
 
-// Route::group(['module' => 'news', 'namespace' => 'Phambinh\News\Http\Controllers', 'middleware' => ['web'], 'prefix' => 'news'], function() {
-// });
-
-Route::group(['module' => 'news', 'namespace' => 'Phambinh\News\Http\Controllers\Admin', 'middleware' => ['web'], 'prefix' => 'admin/news'], function () {
+Route::group(['module' => 'news', 'namespace' => 'Packages\News\Http\Controllers\Admin', 'middleware' => ['web'], 'prefix' => 'admin/news'], function () {
     Route::get('/', 'NewsController@index')->name('admin.news.index')->middleware('can:admin.news.index');
     Route::get('create', 'NewsController@create')->name('admin.news.create')->middleware('can:admin.news.create');
     Route::post('/', 'NewsController@store')->name('admin.news.store')->middleware('can:admin.news.create');
@@ -31,8 +19,4 @@ Route::group(['module' => 'news', 'namespace' => 'Phambinh\News\Http\Controllers
     Route::put('category/{category}/disable', 'CategoryController@disable')->middleware('can:admin.news.category.disable,category');
     Route::put('category/{category}/enable', 'CategoryController@enable')->middleware('can:admin.news.category.enable,category');
     Route::delete('category/{category}', 'CategoryController@destroy')->name('admin.news.category.destroy')->middleware('can:admin.news.category.destroy,category');
-});
-
-Route::group(['module' => 'news', 'namespace' => 'Phambinh\News\Http\Controllers\Admin', 'middleware' => ['web'], 'prefix' => 'api/v1/news'], function () {
-    Route::get('/', 'NewsController@index')->name('api.v1.news.index');
 });

@@ -1,11 +1,11 @@
 <?php
 
-namespace Phambinh\News\Http\Controllers\Admin;
+namespace Packages\News\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use AdminController;
 use Validator;
-use Phambinh\News\News;
+use Packages\News\News;
 
 class NewsController extends AdminController
 {
@@ -13,19 +13,18 @@ class NewsController extends AdminController
     {
         $filter = News::getRequestFilter();
         $this->data['filter'] = $filter;
-        $this->data['newses'] = News::ofQuery($filter)->with('author')->paginate($this->paginate);
+        $this->data['newses'] = News::applyFilter($filter)->with('author')->paginate($this->paginate);
 
-        \Metatag::set('title', 'Tất cả tin tức');
+        \Metatag::set('title', trans('news.list-news'));
         return view('News::admin.list', $this->data);
     }
 
     public function create()
     {
-        \Metatag::set('title', 'Thêm tin tức mới');
-
         $news = new News();
         $this->data['news'] = $news;
-        
+
+        \Metatag::set('title', trans('news.add-new-news'));
         return view('News::admin.save', $this->data);
     }
 
@@ -39,28 +38,20 @@ class NewsController extends AdminController
         ]);
 
         $news = new News();
-
-        $news->fill($request->news);
-
-        if (empty($news->slug)) {
-            $news->slug = str_slug($news->title);
-        }
-
-        $news->author_id = \Auth::user()->id;
-        $news->save();
-        $news->categories()->sync((array) $request->news['category_id']);
+        $news->fill($request->input('news'))->save();
+        $news->categories()->sync((array) $request->input('news.category_id'));
 
         if ($request->ajax()) {
             return response()->json([
-                'title'        =>    'Thành công',
-                'message'    =>    'Thành công',
-                'redirect'    =>    isset($request->save_only) ?
+                'title'        =>    trans('cms.success'),
+                'message'    =>    trans('news.create-news-success'),
+                'redirect'    =>    $request->exists('save_only') ?
                     route('admin.news.edit', ['id' => $news->id]) :
                     route('admin.news.create'),
             ], 200);
         }
 
-        if (isset($request->save_only)) {
+        if ($request->exists('save_only')) {
             return redirect()->route('admin.news.edit', ['id' => $news->id]);
         }
 
@@ -72,7 +63,7 @@ class NewsController extends AdminController
         $this->data['news_id'] = $news->id;
         $this->data['news']    = $news;
 
-        \Metatag::set('title', 'Chỉnh sửa tin tức');
+        \Metatag::set('title', trans('news.edit-news'));
         return view('News::admin.save', $this->data);
     }
 
@@ -85,29 +76,25 @@ class NewsController extends AdminController
             'news.status'            =>    'required|in:enable,disable',
         ]);
 
-        $news->fill($request->news);
-
-        if (empty($news->slug)) {
-            $news->slug = str_slug($news->title);
-        }
+        $news->fill($request->input('news'));
 
         $news->save();
-        $news->categories()->sync((array) $request->news['category_id']);
+        $news->categories()->sync((array) $request->input('news.category_id'));
 
         if ($request->ajax()) {
             $response = [
-                'title'        =>    'Thành công',
-                'message'    =>    'Cập nhật tin thành công',
+                'title'        =>    trans('cms.success'),
+                'message'    =>    trans('news.update-news-success'),
             ];
-            if (isset($request->save_and_out)) {
-                $response['redirect'] = admin_url('news');
+            if ($request->exists('save_and_out')) {
+                $response['redirect'] = route('admin.news.index');
             }
 
             return response()->json($response, 200);
         }
         
-        if (isset($request->save_and_out)) {
-            return redirect(admin_url('news'));
+        if ($request->exists('save_and_out')) {
+            return redirect()->route('admin.news.index');
         }
                 
         return redirect()->back();
@@ -115,12 +102,11 @@ class NewsController extends AdminController
 
     public function disable(Request $request, News $news)
     {
-        $news->status = '0';
-        $news->save();
+        $news->markAsDisable();
         if ($request->ajax()) {
             return response()->json([
-                'title'            =>    'Thành công',
-                'message'        =>    'Đã ẩn tin',
+                'title'            =>    trans('cms.success'),
+                'message'        =>    trans('news.disable-news-success'),
             ], 200);
         }
 
@@ -129,12 +115,11 @@ class NewsController extends AdminController
 
     public function enable(Request $request, News $news)
     {
-        $news->status = '1';
-        $news->save();
+        $news->markAsEnable();
         if ($request->ajax()) {
             return response()->json([
-                'title'            =>    'Thành công',
-                'message'        =>    'Đã công khai tin',
+                'title'            =>    trans('cms.success'),
+                'message'        =>    trans('news.enable-news-success'),
             ], 200);
         }
 
@@ -147,8 +132,8 @@ class NewsController extends AdminController
         
         if ($request->ajax()) {
             return response()->json([
-                'title'            =>    'Thành công',
-                'message'        =>    'Đã xóa tin',
+                'title'            =>    trans('cms.success'),
+                'message'        =>    trans('news.destroy-news-success'),
             ], 200);
         }
 

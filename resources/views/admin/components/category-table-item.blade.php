@@ -10,9 +10,7 @@
 	@if($category_item->parent_id == $parent_id)
 		<tr class="odd gradeX">
 			<td width="50" class="table-checkbox text-center">
-				<div class="checker">
-					<input type="checkbox" class="icheck" value="{{ $category_item->id }}">
-				</div>
+				{!! Form::icheck('id', $category_item->id) !!}
 			</td>
 			<td class="text-center hidden-xs">
 				<strong>
@@ -21,28 +19,28 @@
 			</td>
 			<td><img src="{{ thumbnail_url($category_item->thumbnail, ['height' => '70', 'width' => '70']) }}" /></td>
 			<td>
-				@can('admin.ecommerce.category.edit', $category_item)
-					<a href="{{ route('admin.ecommerce.category.edit', ['id' => $category_item->id]) }}">
+				@can('admin.news.category.edit', $category_item)
+					<a href="{{ route('admin.news.category.edit', ['id' => $category_item->id]) }}">
 						<strong>
 							{{ str_repeat('—', $level) .' '. $category_item->name }}
 						</strong>
 					</a>
 				@endcan
-				@cannot('admin.ecommerce.category.edit', $category_item)
+				@cannot('admin.news.category.edit', $category_item)
 					<strong>
 						{{ str_repeat('—', $level) .' '. $category_item->name }}
 					</strong>
 				@endcannot
-				({{ $category_item->newses->count() }} tin)
+				({{ $category_item->newses->count() }} @lang('news.news'))
 			</td>
 			<td class="hidden-xs">
-				{{ text_time_difference($category_item->updated_at) }}
+				{{ $category_item->updated_at->diffForHumans() }}
 			</td>
 			<td>
 				<div class="btn-group">
 					<a href="" class="btn btn-circle btn-xs grey-salsa btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
 						<span class="hidden-xs">
-							Chức năng
+							@lang('cms.action')
 							<span class="fa fa-angle-down"> </span>
 						</span>
 						<span class="visible-xs">
@@ -51,14 +49,15 @@
 			        </a>
 			        <ul class="dropdown-menu pull-right">
 			        	@if(Route::has('news.category.show'))
-				        	<li><a href="{{ route('news.category.show', ['slug' => $category_item->slug, 'id' => $category_item->id]) }}"><i class="fa fa-eye"></i> Xem</a></li>
+				        	<li><a href="{{ route('news.category.show', ['slug' => $category_item->slug, 'id' => $category_item->id]) }}"><i class="fa fa-eye"></i> @lang('cms.view')</a></li>
 				        	<li role="presentation" class="divider"></li>
 			        	@endif
 			        	@can('admin.news.category.edit', $category_item)
-			            	<li><a href="{{ route('admin.news.category.edit', ['id' => $category_item->id]) }}"><i class="fa fa-pencil"></i> Sửa</a></li>
+			            	<li><a href="{{ route('admin.news.category.edit', ['id' => $category_item->id]) }}"><i class="fa fa-pencil"></i> @lang('cms.edit')</a></li>
+				        	<li role="presentation" class="divider"></li>
 			            @endcan
 			            @can('admin.news.category.destroy', $category_item)
-			        		<li><a data-function="destroy" data-method="delete" href="{{ route('admin.news.category.destroy', ['id' => $category_item->id]) }}"><i class="fa fa-times"></i> Xóa</a></li>
+			        		<li><a data-function="destroy" data-method="delete" href="{{ route('admin.news.category.destroy', ['id' => $category_item->id]) }}"><i class="fa fa-times"></i> @lang('cms.destroy')</a></li>
 			        	@endcan
 			        </ul>
 			    </div>

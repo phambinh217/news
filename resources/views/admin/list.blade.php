@@ -1,218 +1,157 @@
 @extends('Cms::layouts.default', [
 	'active_admin_menu'	=> ['news', 'news.all'],
 	'breadcrumbs' 		=> [
-		'title'	=>	['Tin tức', 'Danh sách'],
+		'title'	=>	[trans('news.news'), trans('news.list')],
 		'url'	=>	[
-			admin_url('news'),
-			admin_url('news'),
+			route('admin.news.index'),
 		],
 	],
 ])
 
-@section('page_title', 'Tất cả tin tức')
+@section('page_title', trans('news.list-news'))
 
 @section('tool_bar')
 	@can('admin.news.create')
 		<a href="{{ route('admin.news.create') }}" class="btn btn-primary">
-			<i class="fa fa-plus"></i> <span class="hidden-xs">Thêm tin tức mới</span>
+			<i class="fa fa-plus"></i> <span class="hidden-xs">@lang('news.add-new-news')</span>
 		</a>
 	@endcan
 @endsection
 
 @section('content')
-	<div class="table-function-container">
-	   	<div class="portlet light bordered">
-		    <div class="portlet-title">
-		        <div class="caption">
-		            <i class="fa fa-filter"></i> Bộ lọc kết quả
-		        </div>
-		    </div>
-		    <div class="portlet-body form">
-		        <form class="form-horizontal form-bordered form-row-stripped">
-		            <div class="form-body">
-		                <div class="row">
-		                    <div class="col-sm-6 md-pr-0">
-		                    	<div class="form-group">
-		                            <label class="control-label col-md-3">Từ khóa</label>
-		                            <div class="col-md-9">
-		                                 <input type="text" class="form-control" name="_keyword" value="{{ $filter['_keyword'] or '' }}" />
-		                            </div>
-		                        </div>
-		                        <div class="form-group">
-		                            <label class="control-label col-md-3">Danh mục</label>
-		                            <div class="col-md-9">
-		                                @include('News::admin.components.form-select-category', [
-	                                		'categories' =>  Phambinh\News\Category::get(),
-	                                		'name' => 'category_id',
-	                                		'selected' => isset($filter['category_id']) ? $filter['category_id'] : '0',
-	                                	])
-		                            </div>
-		                        </div>
-		                    </div>
-		                    <div class="col-sm-6 md-pl-0">
-		                        <div class="form-group">
-		                            <label class="control-label col-md-3">Trạng thái</label>
-		                            <div class="col-md-9">
-		                            	@include('News::admin.components.form-select-status', [
-					                        'statuses' => Phambinh\News\News::getStatusAble(),
-					                        'name' => 'status',
-					                        'selected' => isset($filter['status']) ? $filter['status'] : null,
-					                    ])
-		                            </div>
-		                        </div>
-		                        <div class="form-group">
-		                            <label class="control-label col-md-3">Tác giả</label>
-		                            <div class="col-md-9">
-		                                @include('Cms::components.form-find-user', [
-		                            		'name' => 'author_id',
-		                            		'selected' => isset($filter['author_id']) ? $filter['author_id'] : '0',
-		                            	])
-		                            </div>
-		                        </div>
-		                    </div>
-		                </div>
-		            </div>
-		            <div class="form-actions util-btn-margin-bottom-5">
-		                <div class="row">
-		                    <div class="col-md-12 text-right">
-		                        <button type="submit" class="btn btn-primary">
-		                            <i class="fa fa-filter"></i> Lọc
-								</button>
-		                        <a href="{{ admin_url('news') }}" class="btn default accordion-toggle">
-		                            <i class="fa fa-times"></i> Hủy
-		                        </a>
-		                    </div>
-		                </div>
-		            </div>
-		        </form>
-		    </div>
-		</div>
-	    <div class="row table-above">
-		    <div class="col-sm-6">
-		    	<div class="form-inline mb-10">
-			    	@include('Cms::components.form-apply-action', [
-			    		'actions' => [
-			    			['action' => '', 'name' => ''],
-			    			['action' => '', 'name' => ''],
-			    			['action' => '', 'name' => ''],
-			    		],
-			    	])
-			    </div>
-		    </div>
-		    <div class="col-sm-6 text-right">
-		    	{!! $newses->appends($filter)->render() !!}
-		    </div>
-	    </div>
-	    <div class="note note-success">
-	        <p><i class="fa fa-info"></i> Tổng số {{ $newses->total() }} kết quả</p>
-	    </div>
-	    <div class="table-responsive main">
-			<table class="master-table table table-striped table-hover table-checkable order-column">
-				<thead>
-					<tr>
-						<th width="50" class="table-checkbox text-center">
-							<div class="checker">
-										<input type="checkbox" class="icheck check-all">
-									</div>
-						</th>
-						<th width="50" class="text-center">
-							{!! \Phambinh\News\News::linkSort('ID', 'id') !!}
-						</th>
-						<th class="text-center">
-							{!! \Phambinh\News\News::linkSort('Tên tin tức', 'title') !!}
-						</th>
-						<th>
-							Tác giả
-						</th>
-						<th>
-							{!! \Phambinh\News\News::linkSort('Ngày cập nhật', 'updated_at') !!}
-						</th>
-						<th class="text-center">Thao tác</th>
-					</tr>
-				</thead>
-				<tbody>
-					@foreach($newses as $news_item)
-					<tr class="odd gradeX hover-display-container {{ $news_item->html_class }}">
-						<td width="50" class="table-checkbox text-center">
-							<div class="checker">
-								<input type="checkbox" class="icheck" value="{{ $news_item->id }}">
-							</div>
-						</td>
-						<td class="text-center">
-							<strong>{{ $news_item->id }}</strong>
-						</td>
-						<td>
-							@can('admin.news.edit', $news_item)
-								<a href="{{ route('admin.news.edit', ['id' => $news_item->id]) }}">
-									<strong>{{ $news_item->title }}</strong>
-								</a>
-							@endcan
-							@cannot('admin.news.edit', $news_item)
+	@component('Cms::components.table-function', [
+		'total' => $newses->total(),
+		'pagiate' => $newses->appends($filter)->render(),
+		'bulkactions' => [
+			['action' => '', 'name' => ''],
+			['action' => '', 'name' => ''],
+			['action' => '', 'name' => ''],
+		],
+	])
+		@slot('filter')
+			<div class="row">
+				<div class="col-sm-6 md-pr-0">
+	            	<div class="form-group">
+	                    <label class="control-label col-md-3">@lang('cms.search')</label>
+	                    <div class="col-md-9">
+	                         <input type="text" class="form-control" name="_keyword" value="{{ $filter['_keyword'] or '' }}" />
+	                    </div>
+	                </div>
+	                <div class="form-group">
+	                    <label class="control-label col-md-3">@lang('news.category.category')</label>
+	                    <div class="col-md-9">
+	                    	{!! Form::select('category_id', Packages\News\Category::get()->mapWithKeys(function ($item) {
+	                    		return [$item->id => $item->name];
+	                    	})->all(), isset($filter['category_id']) ? $filter['category_id'] : '', ['class' => 'form-control', 'placeholder' => '']) !!}
+	                    </div>
+	                </div>
+	            </div>
+	            <div class="col-sm-6 md-pl-0">
+	                <div class="form-group">
+	                    <label class="control-label col-md-3">@lang('news.status')</label>
+	                    <div class="col-md-9">
+	                    	{!! Form::select('status', \Packages\News\News::statusable()->mapWithKeys(function ($item) {
+								return [$item['slug'] => $item['name']];
+							})->all(), isset($filter['status']) ? $filter['status'] : NULL, ['class' => 'form-control', 'placeholder' => '']) !!}
+	                    </div>
+	                </div>
+	                <div class="form-group">
+	                    <label class="control-label col-md-3">@lang('news.author')</label>
+	                    <div class="col-md-9">
+	                    	{!! Form::findUser('author_id', isset($filter['author_id']) ? $filter['author_id'] : null) !!}
+	                    </div>
+	                </div>
+	            </div>
+            </div>
+		@endslot
+
+		@slot('heading')
+			<th width="50" class="table-checkbox text-center">
+				{!! Form::icheck(null, null, ['class' => 'check-all']) !!}
+			</th>
+			<th width="50" class="text-center">
+				{!! \Packages\News\News::linkSort(trans('news.id'), 'id') !!}
+			</th>
+			<th class="text-center">
+				{!! \Packages\News\News::linkSort(trans('news.title'), 'title') !!}
+			</th>
+			<th>
+				@lang('news.author')
+			</th>
+			<th>
+				{!! \Packages\News\News::linkSort(trans('news.date_update'), 'updated_at') !!}
+			</th>
+			<th></th>
+		@endslot
+
+		@slot('data')
+			@foreach($newses as $news_item)
+				<tr class="odd gradeX hover-display-container {{ $news_item->html_class }}">
+					<td width="50" class="table-checkbox text-center">
+						{!! Form::icheck('id', $news_item->id) !!}
+					</td>
+					<td class="text-center">
+						<strong>{{ $news_item->id }}</strong>
+					</td>
+					<td>
+						@can('admin.news.edit', $news_item)
+							<a href="{{ route('admin.news.edit', ['id' => $news_item->id]) }}">
 								<strong>{{ $news_item->title }}</strong>
-							@endcannot
-						</td>
-						<td>
-							<img class="img-circle" style="width: 30px;" src="{{ thumbnail_url($news_item->author->avatar, ['width' =>50, 'height' => 50]) }}" alt="" /> {{ $news_item->author->full_name }}
-						</td>
-						<td>
-							{{ text_time_difference($news_item->updated_at) }}
-						</td>
-						<td>
-							<div class="btn-group pull-right" table-function>
-								<a href="" class="btn btn-circle btn-xs grey-salsa btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-									<span class="hidden-xs">
-										Chức năng
-										<span class="fa fa-angle-down"> </span>
-									</span>
-									<span class="visible-xs">
-										<span class="fa fa-cog"> </span>
-									</span>
-		                        </a>
-		                        <ul class="dropdown-menu pull-right">
-		                        	@if(Route::has('news.show'))
-		                            	<li><a href="{{ route('news.show', ['slug' => $news_item->slug, 'id' => $news_item->id]) }}"><i class="fa fa-eye"></i> Xem</a></li>
-		                            	<li role="presentation" class="divider"></li>
-		                            @endif
-		                            
-		                            @can('admin.news.edit', $news_item)
-			                            <li><a href="{{ route('admin.news.edit',['id' => $news_item->id]) }}"><i class="fa fa-pencil"></i> Sửa</a></li>
-			                            <li role="presentation" class="divider"></li>
-			                        @endcan
-		                        	
-		                        	@can('admin.news.disable', $news_item)
-			                        	@if($news_item->isEnable())
-			                        		<li><a data-function="disable" data-method="put" href="{{ route('admin.news.disable', ['id' => $news_item->id]) }}"><i class="fa fa-recycle"></i> Xóa tạm</a></li>
-			                        	@endif
-		                        	@endcan
-	
-		                            @if($news_item->isDisable())
-		                        		@can('admin.news.enable', $news_item)
-		                            		<li><a data-function="enable" data-method="put" href="{{ route('admin.news.enable', ['id' => $news_item->id]) }}"><i class="fa fa-recycle"></i> Khôi phục</a></li>
-		                            		<li role="presentation" class="divider"></li>
-		                            	@endcan
-
-		                            	@can('admin.news.destroy', $news_item)
-		                            		<li><a data-function="destroy" data-method="delete" href="{{ route('admin.news.destroy', ['id' => $news_item->id]) }}"><i class="fa fa-times"></i> Xóa</a></li>
-		                            	@endcan
+							</a>
+						@endcan
+						@cannot('admin.news.edit', $news_item)
+							<strong>{{ $news_item->title }}</strong>
+						@endcannot
+					</td>
+					<td>
+						<img class="img-circle" style="width: 30px;" src="{{ thumbnail_url($news_item->author->avatar, ['width' =>50, 'height' => 50]) }}" alt="" /> {{ $news_item->author->full_name }}
+					</td>
+					<td>
+						{{ $news_item->updated_at->diffForHumans() }}
+					</td>
+					<td>
+						<div class="btn-group pull-right">
+							<a href="" class="btn btn-circle btn-xs grey-salsa btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+								<span class="hidden-xs">
+									@lang('cms.action')
+									<span class="fa fa-angle-down"> </span>
+								</span>
+								<span class="visible-xs">
+									<span class="fa fa-cog"> </span>
+								</span>
+	                        </a>
+	                        <ul class="dropdown-menu pull-right">
+	                        	@if(Route::has('news.show'))
+	                            	<li><a href="{{ route('news.show', ['slug' => $news_item->slug, 'id' => $news_item->id]) }}"><i class="fa fa-eye"></i> @lang('cms.view')</a></li>
+	                            	<li role="presentation" class="divider"></li>
+	                            @endif
+	                            
+	                            @can('admin.news.edit', $news_item)
+		                            <li><a href="{{ route('admin.news.edit',['id' => $news_item->id]) }}"><i class="fa fa-pencil"></i> @lang('cms.edit')</a></li>
+		                            <li role="presentation" class="divider"></li>
+		                        @endcan
+	                        	
+	                        	@can('admin.news.disable', $news_item)
+		                        	@if($news_item->isEnable())
+		                        		<li><a data-function="disable" data-method="put" href="{{ route('admin.news.disable', ['id' => $news_item->id]) }}"><i class="fa fa-recycle"></i> @lang('cms.disable')</a></li>
 		                        	@endif
-		                        </ul>
-		                    </div>
-						</td>
+	                        	@endcan
 
-					</tr>
-					@endforeach
-				</tbody>
-			</table>  
-		</div>
-	</div>
+	                            @if($news_item->isDisable())
+	                        		@can('admin.news.enable', $news_item)
+	                            		<li><a data-function="enable" data-method="put" href="{{ route('admin.news.enable', ['id' => $news_item->id]) }}"><i class="fa fa-recycle"></i> @lang('cms.enable')</a></li>
+	                            		<li role="presentation" class="divider"></li>
+	                            	@endcan
+
+	                            	@can('admin.news.destroy', $news_item)
+	                            		<li><a data-function="destroy" data-method="delete" href="{{ route('admin.news.destroy', ['id' => $news_item->id]) }}"><i class="fa fa-times"></i> @lang('cms.destroy')</a></li>
+	                            	@endcan
+	                        	@endif
+	                        </ul>
+	                    </div>
+					</td>
+				</tr>
+			@endforeach
+		@endslot
+	@endcomponent
 @endsection
-
-@push('css')
-	<link href="{{ asset_url('admin', 'global/plugins/bootstrap-toastr/toastr.min.css')}}" rel="stylesheet" type="text/css" />
-	<link href="{{ asset_url('admin', 'global/plugins/icheck/skins/all.css') }}" rel="stylesheet" type="text/css" />
-@endpush
-
-@push('js_footer')
-	<script type="text/javascript" src="{{ asset_url('admin', 'global/plugins/bootstrap-toastr/toastr.min.js') }}"></script>
-	<script type="text/javascript" src="{{ asset_url('admin', 'global/plugins/icheck/icheck.min.js')}} "></script>
-@endpush

@@ -1,9 +1,9 @@
 <?php
 
-namespace Phambinh\News\Http\Controllers\Admin;
+namespace Packages\News\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use Phambinh\News\Category;
+use Packages\News\Category;
 use AdminController;
 use Validator;
 
@@ -16,14 +16,11 @@ class CategoryController extends AdminController
      */
     public function index()
     {
-        \Metatag::set('title', 'Danh sách danh mục tin tức');
-
-        $category = new Category();
-        $filter = $category->getRequestFilter();
-        $this->data['category']    = $category;
-        $this->data['categories']    = $category->ofQuery($filter)->paginate($this->paginate);
+        $filter = Category::getRequestFilter();
+        $this->data['categories']    = Category::applyFilter($filter)->paginate($this->paginate);
         $this->data['filter'] = $filter;
 
+        \Metatag::set('title', trans('news.category.list-category'));
         return view('News::admin.category.list', $this->data);
     }
 
@@ -34,10 +31,9 @@ class CategoryController extends AdminController
      */
     public function create()
     {
-        \Metatag::set('title', 'Thêm danh mục mới');
-
         $this->data['category'] = new Category();
 
+        \Metatag::set('title', trans('news.category.add-new-category'));
         return view('News::admin.category.save', $this->data);
     }
 
@@ -65,15 +61,15 @@ class CategoryController extends AdminController
 
         if ($request->ajax()) {
             return response()->json([
-                'title'        =>    'Thành công',
-                'message'    =>    'Thành công',
-                'redirect'    =>    isset($request->save_only) ?
+                'title'        =>    trans('cms.success'),
+                'message'    =>    trans('news.category.create-menu-success'),
+                'redirect'    =>    $request->exists('save_only') ?
                     route('admin.news.category.edit', ['id' => $category->id]) :
                     route('admin.news.category.create'),
             ]);
         }
         
-        if (isset($request->save_only)) {
+        if ($request->exists('save_only')) {
             return redirect(route('admin.news.category.edit', ['id' => $category->id]));
         }
 
@@ -88,11 +84,10 @@ class CategoryController extends AdminController
      */
     public function edit(Category $category)
     {
-        \Metatag::set('title', 'Chỉnh sửa danh mục');
-
         $this->data['category'] = $category;
         $this->data['category_id'] = $category->id;
 
+        \Metatag::set('title', trans('news.category.edit-category'));
         return view('News::admin.category.save', $this->data);
     }
 
@@ -120,8 +115,8 @@ class CategoryController extends AdminController
 
         if ($request->ajax()) {
             $response = [
-                'title'      =>    'Thành công',
-                'message'    =>    'Đã cập nhật danh mục',
+                'title'      =>    trans('cms.success'),
+                'message'    =>    trans('news.category.update-category-success'),
             ];
             if ($request->exists('save_and_out')) {
                 $response['redirect'] = route('admin.news.category.index');
@@ -148,8 +143,8 @@ class CategoryController extends AdminController
         if ($category->newses()->count()) {
             if ($request->ajax()) {
                 return response()->json([
-                    'title'        =>    'Lỗi',
-                    'message'    =>    'Danh mục đã có tin tức',
+                    'title'        =>    trans('cms.error'),
+                    'message'    =>    trans('news.category.category-has-news'),
                 ], 422);
             }
             
@@ -160,8 +155,8 @@ class CategoryController extends AdminController
         
         if ($request->ajax()) {
             return response()->json([
-                'title'            =>    'Thành công',
-                'message'        =>    'Đã xóa danh mục thành công',
+                'title'            =>    trans('cms.success'),
+                'message'        =>    trans('news.category.destroy-category-success'),
             ], 200);
         }
 
