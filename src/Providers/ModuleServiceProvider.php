@@ -7,7 +7,7 @@
  * @version: 1.0
  * @package: PackagesCMS
  */
-namespace Packages\News\Providers;
+namespace Phambinh\News\Providers;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -66,7 +66,7 @@ class ModuleServiceProvider extends ServiceProvider
     public function register()
     {
         \Module::registerFromJsonFile('appearance', __DIR__ .'/../../module.json');
-        \Menu::registerType('Danh mục tin', \Packages\News\Category::class);
+        \Menu::registerType('Danh mục tin', \Phambinh\News\Category::class);
         $this->registerAdminMenu();
     }
 

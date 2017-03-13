@@ -40,7 +40,7 @@
 	                <div class="form-group">
 	                    <label class="control-label col-md-3">@lang('news.category.category')</label>
 	                    <div class="col-md-9">
-	                    	{!! Form::select('category_id', Packages\News\Category::get()->mapWithKeys(function ($item) {
+	                    	{!! Form::select('category_id', Phambinh\News\Category::get()->mapWithKeys(function ($item) {
 	                    		return [$item->id => $item->name];
 	                    	})->all(), isset($filter['category_id']) ? $filter['category_id'] : '', ['class' => 'form-control', 'placeholder' => '']) !!}
 	                    </div>
@@ -50,7 +50,7 @@
 	                <div class="form-group">
 	                    <label class="control-label col-md-3">@lang('news.status')</label>
 	                    <div class="col-md-9">
-	                    	{!! Form::select('status', \Packages\News\News::statusable()->mapWithKeys(function ($item) {
+	                    	{!! Form::select('status', \Phambinh\News\News::statusable()->mapWithKeys(function ($item) {
 								return [$item['slug'] => $item['name']];
 							})->all(), isset($filter['status']) ? $filter['status'] : NULL, ['class' => 'form-control', 'placeholder' => '']) !!}
 	                    </div>
@@ -70,16 +70,16 @@
 				{!! Form::icheck(null, null, ['class' => 'check-all']) !!}
 			</th>
 			<th width="50" class="text-center">
-				{!! \Packages\News\News::linkSort(trans('news.id'), 'id') !!}
+				{!! \Phambinh\News\News::linkSort(trans('news.id'), 'id') !!}
 			</th>
 			<th class="text-center">
-				{!! \Packages\News\News::linkSort(trans('news.title'), 'title') !!}
+				{!! \Phambinh\News\News::linkSort(trans('news.title'), 'title') !!}
 			</th>
 			<th>
 				@lang('news.author')
 			</th>
 			<th>
-				{!! \Packages\News\News::linkSort(trans('news.date_update'), 'updated_at') !!}
+				{!! \Phambinh\News\News::linkSort(trans('news.date_update'), 'updated_at') !!}
 			</th>
 			<th></th>
 		@endslot

@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['module' => 'news', 'namespace' => 'Packages\News\Http\Controllers\Admin', 'middleware' => ['web'], 'prefix' => 'admin/news'], function () {
+Route::group(['module' => 'news', 'namespace' => 'Phambinh\News\Http\Controllers\Admin', 'middleware' => ['web'], 'prefix' => 'admin/news'], function () {
     Route::get('/', 'NewsController@index')->name('admin.news.index')->middleware('can:admin.news.index');
     Route::get('create', 'NewsController@create')->name('admin.news.create')->middleware('can:admin.news.create');
     Route::post('/', 'NewsController@store')->name('admin.news.store')->middleware('can:admin.news.create');

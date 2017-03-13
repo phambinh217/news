@@ -1,15 +1,15 @@
 <?php
 
-namespace Packages\News;
+namespace Phambinh\News;
 
 use Illuminate\Database\Eloquent\Model;
-use Packages\Cms\Support\Traits\Filter;
-use Packages\Appearance\Support\Traits\NavigationMenu;
-use Packages\Cms\Support\Traits\Thumbnail;
+use Phambinh\Cms\Support\Traits\Filter;
+use Phambinh\Appearance\Support\Traits\NavigationMenu;
+use Phambinh\Cms\Support\Traits\Thumbnail;
 use Illuminate\Database\Eloquent\Builder;
-use Packages\Cms\Support\Traits\SEO;
-use Packages\Cms\Support\Traits\Hierarchical;
-use Packages\Cms\Support\Traits\Slug;
+use Phambinh\Cms\Support\Traits\SEO;
+use Phambinh\Cms\Support\Traits\Hierarchical;
+use Phambinh\Cms\Support\Traits\Slug;
 
 class Category extends Model
 {
@@ -18,6 +18,8 @@ class Category extends Model
     protected $table = 'news_categories';
 
     protected $primaryKey = 'id';
+
+    protected $slugSource = 'name';
 
     /**
      * The attributes that are mass assignable.
@@ -53,7 +55,7 @@ class Category extends Model
 
     public function newses()
     {
-        return $this->beLongsToMany('Packages\News\News', 'news_to_category');
+        return $this->beLongsToMany('Phambinh\News\News', 'news_to_category');
     }
 
     public function scopeApplyFilter($query, $args = [])

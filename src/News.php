@@ -1,15 +1,15 @@
 <?php
 
-namespace Packages\News;
+namespace Phambinh\News;
 
 use Illuminate\Database\Eloquent\Model;
-use Packages\Cms\Support\Traits\Filter;
-use Packages\Cms\Support\Traits\Thumbnail;
-use Packages\Cms\Support\Traits\SEO;
-use Packages\Cms\Support\Traits\Hierarchical;
-use Packages\Cms\Support\Traits\Author;
-use Packages\Cms\Support\Traits\Status;
-use Packages\Cms\Support\Traits\Slug;
+use Phambinh\Cms\Support\Traits\Filter;
+use Phambinh\Cms\Support\Traits\Thumbnail;
+use Phambinh\Cms\Support\Traits\SEO;
+use Phambinh\Cms\Support\Traits\Hierarchical;
+use Phambinh\Cms\Support\Traits\Author;
+use Phambinh\Cms\Support\Traits\Status;
+use Phambinh\Cms\Support\Traits\Slug;
 
 class News extends Model
 {
@@ -65,12 +65,12 @@ class News extends Model
 
     public function categories()
     {
-        return $this->beLongsToMany('Packages\News\Category', 'news_to_category');
+        return $this->beLongsToMany('Phambinh\News\Category', 'news_to_category');
     }
 
     public function author()
     {
-        return $this->beLongsTo('Packages\Cms\User');
+        return $this->beLongsTo('Phambinh\Cms\User');
     }
 
     public function scopeApplyFilter($query, $args = [])

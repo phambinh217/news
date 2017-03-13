@@ -1,9 +1,9 @@
 <?php
 
-namespace Packages\News\Http\Controllers\Admin;
+namespace Phambinh\News\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use Packages\News\Category;
+use Phambinh\News\Category;
 use AdminController;
 use Validator;
 
@@ -47,17 +47,12 @@ class CategoryController extends AdminController
         $this->validate($request, [
             'category.name'        => 'required|max:255',
             'category.slug'            => 'max:255',
-            'category.description'    => 'max:300',
+            'category.description'    => 'max:300'
         ]);
 
         $category = new Category();
         
-        $category->fill($request->category);
-        if (empty($category->slug)) {
-            $category->slug = str_slug($category->title);
-        }
-
-        $category->save();
+        $category->fill($request->input('category'))->save();
 
         if ($request->ajax()) {
             return response()->json([
@@ -102,16 +97,10 @@ class CategoryController extends AdminController
         $this->validate($request, [
             'category.name'        => 'required|max:255',
             'category.slug'            => 'max:255',
-            'category.description'    => 'max:300',
+            'category.description'    => 'max:300'
         ]);
 
-        $category->fill($request->input('category'));
-        
-        if (empty($category->slug)) {
-            $category->slug = str_slug($category->title);
-        }
-
-        $category->save();
+        $category->fill($request->input('category'))->save();
 
         if ($request->ajax()) {
             $response = [

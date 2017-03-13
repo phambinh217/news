@@ -30,14 +30,14 @@
 				{!! Form::icheck(null, null, ['class' => 'check-all']) !!}
 			</th>
 			<th class="text-center">
-				{!! \Packages\News\Category::linkSort(trans('news.category.id'), 'id') !!}
+				{!! \Phambinh\News\Category::linkSort(trans('news.category.id'), 'id') !!}
 			</th>
 			<th>Thumbnail</th>
 			<th>
-				{!! \Packages\News\Category::linkSort(trans('news.category.title'), 'title') !!}
+				{!! \Phambinh\News\Category::linkSort(trans('news.category.title'), 'title') !!}
 			</th>
 			<th>
-				{!! \Packages\News\Category::linkSort(trans('news.category.date_update'), 'updated_at') !!}
+				{!! \Phambinh\News\Category::linkSort(trans('news.category.date_update'), 'updated_at') !!}
 			</th>
 			<th></th>
 			
