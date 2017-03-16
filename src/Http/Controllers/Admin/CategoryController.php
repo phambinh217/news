@@ -57,7 +57,7 @@ class CategoryController extends AdminController
         if ($request->ajax()) {
             return response()->json([
                 'title'        =>    trans('cms.success'),
-                'message'    =>    trans('news.category.create-menu-success'),
+                'message'    =>    trans('news.category.create-category-success'),
                 'redirect'    =>    $request->exists('save_only') ?
                     route('admin.news.category.edit', ['id' => $category->id]) :
                     route('admin.news.category.create'),

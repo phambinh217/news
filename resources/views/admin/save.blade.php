@@ -75,7 +75,7 @@
                                     @lang('news.category.category') <span class="required">*</span>
                                 </label>
                                 <div class="col-md-10">
-                                    @include('News::admin.components.form-checkbox-category', [
+                                    @include('News::admin.components.form-checkbox-category-with-create', [
                                         'categories' =>  Phambinh\News\Category::get(),
                                         'name' => 'news[category_id][]',
                                         'checked' => $news->categories->pluck('id')->all(),
@@ -96,12 +96,9 @@
                                     @lang('news.status') <span class="required">*</span>
                                 </label>
                                 <div class="col-sm-10">
-                                    @include('News::admin.components.form-select-status', [
-                                        'statuses' => $news->statusable()->all(),
-                                        'class' => 'width-auto',
-                                        'name' => 'news[status]',
-                                        'selected' => $news->status_slug,
-                                    ])
+                                    {!! Form::select('news[status]', $news->statusable()->mapWithKeys(function ($item) {
+                                        return [$item['slug'] => $item['name']];
+                                    })->all(), $news->status_slug, ['class' => 'form-control width-auto', 'placeholder' => '']) !!}
                                 </div>
                             </div>
                         </div>

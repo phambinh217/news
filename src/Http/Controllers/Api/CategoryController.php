@@ -4,10 +4,10 @@ namespace Phambinh\News\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Phambinh\News\Category;
-use AdminController;
+use ApiController;
 use Validator;
 
-class CategoryController extends AdminController
+class CategoryController extends ApiController
 {
     public function store(Request $request)
     {
