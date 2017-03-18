@@ -38,7 +38,9 @@ class NewsController extends AdminController
         ]);
 
         $news = new News();
-        $news->fill($request->input('news'))->save();
+        $news->fill($request->input('news'));
+        $news->author_id = \Auth::user()->id;
+        $news->save();
         $news->categories()->sync((array) $request->input('news.category_id'));
 
         if ($request->ajax()) {
